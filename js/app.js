@@ -50,6 +50,7 @@ const SETUP = [
       <ul class="features">
         <li>🎂 <b>Narozeniny</b> a 💍 <b>výročí</b>: kolikáté jsou a připomínka předem</li>
         <li>💐 <b>Svátky</b>: stačí napsat jméno, datum se doplní podle českého kalendáře</li>
+        <li>🪪 <b>Doklady</b> a 🚗 <b>technické kontroly</b>: kdy končí platnost pasu, řidičáku či STK</li>
         <li>🛡️ <b>Záruky</b>, 🔁 <b>předplatná</b> a 🔧 <b>údržba</b>: konce záruk, platby, servisní termíny</li>
         <li>📋 <b>Přehled</b>: všechno nadcházející seřazené podle data na jednom místě</li>
       </ul>
@@ -273,7 +274,7 @@ function renderMain() {
   // Filtry
   const counts = { all: all.length };
   for (const i of all) counts[i.type] = (counts[i.type] || 0) + 1;
-  $('#filters').innerHTML = [['all', 'Vše', ''], ...Object.entries(TYPES).map(([k, t]) => [k, t.label, t.icon])]
+  $('#filters').innerHTML = [['all', 'Vše', ''], ...Object.entries(TYPES).map(([k, t]) => [k, t.short || t.label, t.icon])]
     .map(([k, label, icon]) => `<button class="chip ${state.filter === k ? 'on' : ''}" data-filter="${k}">${icon} ${label} <small>${counts[k] || 0}</small></button>`)
     .join('');
 
@@ -285,7 +286,7 @@ function renderMain() {
     .sort((a, b) => (a.days < 0) - (b.days < 0) || (a.days < 0 ? b.days - a.days : a.days - b.days));
 
   if (!all.length) {
-    $('#list').innerHTML = `<div class="empty"><p>Zatím tu nic není.</p><p class="muted">Přidejte narozeniny, svátek, výročí, záruku, předplatné nebo úkon údržby.</p>
+    $('#list').innerHTML = `<div class="empty"><p>Zatím tu nic není.</p><p class="muted">Přidejte narozeniny, svátek, výročí, doklad, STK, záruku, předplatné nebo úkon údržby.</p>
       <button class="primary" data-action="add">+ Přidat první položku</button></div>`;
     return;
   }
@@ -299,6 +300,8 @@ function renderMain() {
       : (i.repeat.interval > 4 ? `každých ${i.repeat.interval} let` : i.repeat.interval > 1 ? `každé ${i.repeat.interval} roky` : 'ročně');
     const price = i.price ? `${Number(i.price).toLocaleString('cs-CZ')} ${esc(i.currency)}` : '';
     const label = i.type === 'zaruka' ? (i.days < 0 ? 'záruka skončila' : 'záruka končí')
+      : i.type === 'doklad' ? (i.days < 0 ? 'platnost skončila' : 'platnost končí')
+      : i.type === 'stk' ? (i.days < 0 ? 'STK propadla' : 'STK do')
       : TYPES[i.type]?.yearly ? occasion(i, i.next) : '';
     return `
       <article class="item t-${i.type}" data-id="${esc(i.id)}" tabindex="0">
@@ -347,6 +350,8 @@ function occasion(item, onDate) {
     case 'vyroci':     return n > 0 ? `${n}. výročí` : 'výročí';
     case 'svatek':     return 'svátek';
     case 'zaruka':     return 'konec záruky';
+    case 'doklad':     return 'konec platnosti';
+    case 'stk':        return 'termín technické kontroly';
     case 'predplatne': return item.price ? `platba ${Number(item.price).toLocaleString('cs-CZ')} ${item.currency || 'Kč'}` : 'platba';
     case 'udrzba':     return 'údržba';
     default:           return '';
@@ -358,7 +363,7 @@ const RANGES = [[30, 'Měsíc'], [90, '3 měsíce'], [365, 'Rok']];
 const AGENDA_FILTERS = [
   ['all', 'Vše', ''],
   ['people', 'Lidé', '👥'],
-  ...Object.entries(TYPES).map(([k, t]) => [k, t.label, t.icon]),
+  ...Object.entries(TYPES).map(([k, t]) => [k, t.short || t.label, t.icon]),
 ];
 const PEOPLE = ['narozeniny', 'svatek', 'vyroci'];
 const MONTHS = ['leden', 'únor', 'březen', 'duben', 'květen', 'červen', 'červenec', 'srpen', 'září', 'říjen', 'listopad', 'prosinec'];
@@ -405,7 +410,7 @@ function renderAgenda() {
   });
 
   if (!shown.length) {
-    const what = state.items.length ? 'V tomto období nic není.' : 'Zatím tu nic není. Přidejte narozeniny, svátky, záruky…';
+    const what = state.items.length ? 'V tomto období nic není.' : 'Zatím tu nic není. Přidejte narozeniny, svátky, doklady, STK…';
     $('#agenda').innerHTML = `<div class="empty"><p>${what}</p>
       ${state.items.length ? '' : '<button class="primary" data-action="add">+ Přidat první položku</button>'}</div>`;
     return;
@@ -472,6 +477,8 @@ $('#agenda').onkeydown = e => { if (e.key === 'Enter' && e.target.matches('li'))
 // ---------- Formulář ----------
 const DEFAULTS = {
   zaruka:     { freq: 'none',    remindDays: 28, dateLabel: 'Konec záruky' },
+  doklad:     { freq: 'none',    remindDays: 28, dateLabel: 'Platnost do', placeholder: 'např. Cestovní pas – Jan, Řidičský průkaz, Průkaz vůdce plavidla' },
+  stk:        { freq: 'yearly', interval: 2, remindDays: 28, dateLabel: 'Platnost STK do', placeholder: 'např. Škoda Octavia 1AB 2345, přívěs' },
   predplatne: { freq: 'monthly', remindDays: 3,  dateLabel: 'Další platba' },
   udrzba:     { freq: 'yearly',  remindDays: 14, dateLabel: 'Termín' },
   narozeniny: { freq: 'yearly',  remindDays: 7,  dateLabel: 'Datum narození', placeholder: 'např. Jana Nováková' },
@@ -486,7 +493,7 @@ let currentType = 'zaruka';
 function setType(type, applyDefaults) {
   currentType = type;
   $('#type-pick').innerHTML = Object.entries(TYPES).map(([k, t]) =>
-    `<button type="button" class="chip ${k === type ? 'on' : ''}" data-type="${k}">${t.icon} ${t.label}</button>`).join('');
+    `<button type="button" class="chip ${k === type ? 'on' : ''}" data-type="${k}">${t.icon} ${t.short || t.label}</button>`).join('');
   const d = DEFAULTS[type];
   const t = TYPES[type];
   $('#date-label').textContent = d.dateLabel;
@@ -496,7 +503,7 @@ function setType(type, applyDefaults) {
   $('.price-row').hidden = !!t.yearly;
   $('.noyear-wrap').hidden = !t.yearly || !!t.noYear;
   form.note.placeholder = t.yearly ? 'co má rád/a, nápady na dárek…' : 'číslo účtenky, kde je uložená, kontakt na servis…';
-  if (applyDefaults) { form.freq.value = d.freq; form.remindDays.value = d.remindDays; }
+  if (applyDefaults) { form.freq.value = d.freq; form.interval.value = d.interval || 1; form.remindDays.value = d.remindDays; }
   syncInterval();
   updateNameDayHint(applyDefaults);
 }

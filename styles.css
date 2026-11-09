@@ -210,3 +210,5 @@ dialog form, .dlg-pad { padding: 1.5rem; }
 
 .features { list-style: none; padding: 0; margin: .5rem 0 1rem; }
 .features li { margin-bottom: .45rem; }
+.item.t-doklad { border-left-color: #d50000; }
+.item.t-stk { border-left-color: #039be5; }

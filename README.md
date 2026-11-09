@@ -1,6 +1,7 @@
 # jnCalendar
 
-Malá webová aplikace na **narozeniny, svátky, výročí, záruky, předplatná a údržbu** (třeba lodi).
+Malá webová aplikace na **narozeniny, svátky, výročí, platnost dokladů, technické kontroly,
+záruky, předplatná a údržbu** (třeba lodi).
 Každá položka se uloží jako celodenní událost do samostatného Google kalendáře **jnCalendar**
 a dostane připomínku. Připomínky tak chodí z Google kalendáře do telefonu i počítače,
 ať je aplikace spuštěná, nebo ne.
@@ -13,6 +14,9 @@ ať je aplikace spuštěná, nebo ne.
 - **Narozeniny a výročí:** opakují se každý rok a přehled ukazuje, kolikáté jsou („40. narozeniny“,
   „10. výročí“). Když rok neznáte, zaškrtněte *rok neznám*.
 - **Svátky:** stačí napsat jméno, datum se doplní samo podle českého kalendáře jmen.
+- **Doklady a STK:** konec platnosti pasu, občanky, řidičáku, průkazu vůdce plavidla nebo technické
+  kontroly. STK se ve výchozím stavu opakuje každé 2 roky; po kontrole stačí upravit datum.
+  Připomínka chodí 28 dní předem (víc Google nedovolí), v přehledu ale termín vidíte i dřív.
 - **Položky:** správa všeho, co je v kalendáři, se souhrnem prošlých záruk a měsíční ceny předplatných.
 
 ## Spuštění
