@@ -139,7 +139,9 @@ js/svatky.js    český kalendář jmen (data z balíčku namedays, MIT licence)
 help.html       nápověda; náhledy obrazovek v help/img/
 manifest.webmanifest, sw.js, icons/   instalace jako aplikace (PWA)
 tools/          screenshots.py (náhledy do nápovědy), stamp.py (verze souborů), icons.py (ikony)
-CLAUDE.md       pokyny pro úpravy (nápověda, náhledy, verze)
+AGENTS.md       pro AI agenty a vývojáře: co aplikace dělá, jak a proč (architektura, data, toky)
+CLAUDE.md       pravidla pro každou úpravu (nápověda, náhledy, verze)
+tests/          unit testy (node tests/dates.test.mjs)
 server.ps1      lokální server na portu 8080
 start.cmd       spouštěč
 ```

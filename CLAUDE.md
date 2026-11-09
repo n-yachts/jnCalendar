@@ -3,6 +3,9 @@
 Statická webová aplikace (HTML + JS moduly, bez buildu) nad Google Calendar API.
 Nasazuje se přes GitHub Pages z větve `main`: https://n-yachts.github.io/lhutnik/
 
+**Podrobný popis – co aplikace dělá, jak a proč (architektura, datový model, toky, omezení):
+[`AGENTS.md`](AGENTS.md).** Přečti ho před větší změnou.
+
 ## Při každé změně aplikace
 
 1. **Aktualizuj nápovědu `help.html`** – nové funkce, změněné texty, popisky tlačítek, tabulky typů.
@@ -36,4 +39,5 @@ import přijímá soubory s `app: 'jnCalendar'`, klíče v `localStorage` zůst�
 - `manifest.webmanifest`, `sw.js` (service worker „nejdřív síť“), `icons/` – instalace jako aplikace (PWA);
   ikony generuje `tools/icons.py`
 - `server.ps1` + `start.cmd` – lokální server na `http://localhost:8080`
-- `tools/` – `screenshots.py` (náhledy do nápovědy), `stamp.py` (verze souborů)
+- `tools/` – `screenshots.py` (náhledy do nápovědy + smoke test), `stamp.py` (verze souborů), `icons.py`
+- `tests/dates.test.mjs` – unit testy dat: `node tests/dates.test.mjs`
