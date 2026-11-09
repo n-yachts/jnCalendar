@@ -1,7 +1,7 @@
 # jnCalendar
 
 Malá webová aplikace na **narozeniny, svátky, výročí, platnost dokladů, technické kontroly,
-záruky, předplatná a údržbu** (třeba lodi).
+lékařské prohlídky, záruky, předplatná a údržbu** (třeba lodi).
 Každá položka se uloží jako celodenní událost do samostatného Google kalendáře **jnCalendar**
 a dostane připomínku. Připomínky tak chodí z Google kalendáře do telefonu i počítače,
 ať je aplikace spuštěná, nebo ne.
@@ -17,6 +17,9 @@ ať je aplikace spuštěná, nebo ne.
 - **Doklady a STK:** konec platnosti pasu, občanky, řidičáku, průkazu vůdce plavidla nebo technické
   kontroly. STK se ve výchozím stavu opakuje každé 2 roky; po kontrole stačí upravit datum.
   Připomínka chodí 28 dní předem (víc Google nedovolí), v přehledu ale termín vidíte i dřív.
+- **Lékařské prohlídky:** rychlá volba běžných preventivních prohlídek s obvyklými intervaly
+  (praktický lékař každé 2 roky, zubař 2× ročně, gynekolog každý rok, mamografie každé 2 roky
+  od 45 let). Po návštěvě stačí upravit datum na nový termín.
 - **Položky:** správa všeho, co je v kalendáři, se souhrnem prošlých záruk a měsíční ceny předplatných.
 
 ## Spuštění

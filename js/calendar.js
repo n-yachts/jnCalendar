@@ -48,7 +48,7 @@ export async function ensureCalendar(knownId) {
     method: 'POST',
     body: {
       summary: CALENDAR_NAME,
-      description: 'Narozeniny, svátky, výročí, záruky, doklady, technické kontroly, předplatná a údržba – spravuje aplikace jnCalendar (https://n-yachts.github.io/jnCalendar/).',
+      description: 'Narozeniny, svátky, výročí, záruky, doklady, technické kontroly, lékařské prohlídky, předplatná a údržba – spravuje aplikace jnCalendar (https://n-yachts.github.io/jnCalendar/).',
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Prague',
     },
   });
@@ -71,6 +71,7 @@ export const TYPES = {
   zaruka:     { label: 'Záruka',     prefix: 'Konec záruky', color: '9',  icon: '🛡️' },
   doklad:     { label: 'Doklady',    prefix: 'Konec platnosti', color: '11', icon: '🪪' },
   stk:        { label: 'Technická kontrola', short: 'STK', prefix: 'Technická kontrola', color: '7', icon: '🚗' },
+  prohlidka:  { label: 'Lékařské prohlídky', short: 'Prohlídky', prefix: 'Preventivní prohlídka', color: '5', icon: '🩺' },
   predplatne: { label: 'Předplatné', prefix: 'Předplatné',   color: '6',  icon: '🔁' },
   udrzba:     { label: 'Údržba',     prefix: 'Údržba',       color: '10', icon: '🔧' },
   narozeniny: { label: 'Narozeniny', prefix: 'Narozeniny',   color: '3',  icon: '🎂', yearly: true },

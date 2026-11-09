@@ -51,6 +51,7 @@ const SETUP = [
         <li>🎂 <b>Narozeniny</b> a 💍 <b>výročí</b>: kolikáté jsou a připomínka předem</li>
         <li>💐 <b>Svátky</b>: stačí napsat jméno, datum se doplní podle českého kalendáře</li>
         <li>🪪 <b>Doklady</b> a 🚗 <b>technické kontroly</b>: kdy končí platnost pasu, řidičáku či STK</li>
+        <li>🩺 <b>Lékařské prohlídky</b>: praktik, zubař, gynekolog… s obvyklými intervaly</li>
         <li>🛡️ <b>Záruky</b>, 🔁 <b>předplatná</b> a 🔧 <b>údržba</b>: konce záruk, platby, servisní termíny</li>
         <li>📋 <b>Přehled</b>: všechno nadcházející seřazené podle data na jednom místě</li>
       </ul>
@@ -286,7 +287,7 @@ function renderMain() {
     .sort((a, b) => (a.days < 0) - (b.days < 0) || (a.days < 0 ? b.days - a.days : a.days - b.days));
 
   if (!all.length) {
-    $('#list').innerHTML = `<div class="empty"><p>Zatím tu nic není.</p><p class="muted">Přidejte narozeniny, svátek, výročí, doklad, STK, záruku, předplatné nebo úkon údržby.</p>
+    $('#list').innerHTML = `<div class="empty"><p>Zatím tu nic není.</p><p class="muted">Přidejte narozeniny, svátek, výročí, doklad, STK, prohlídku, záruku, předplatné nebo úkon údržby.</p>
       <button class="primary" data-action="add">+ Přidat první položku</button></div>`;
     return;
   }
@@ -354,6 +355,7 @@ function occasion(item, onDate) {
     case 'stk':        return 'termín technické kontroly';
     case 'predplatne': return item.price ? `platba ${Number(item.price).toLocaleString('cs-CZ')} ${item.currency || 'Kč'}` : 'platba';
     case 'udrzba':     return 'údržba';
+    case 'prohlidka':  return 'preventivní prohlídka';
     default:           return '';
   }
 }
@@ -481,6 +483,8 @@ const DEFAULTS = {
   stk:        { freq: 'yearly', interval: 2, remindDays: 28, dateLabel: 'Platnost STK do', placeholder: 'např. Škoda Octavia 1AB 2345, přívěs' },
   predplatne: { freq: 'monthly', remindDays: 3,  dateLabel: 'Další platba' },
   udrzba:     { freq: 'yearly',  remindDays: 14, dateLabel: 'Termín' },
+  prohlidka:  { freq: 'yearly', interval: 2, remindDays: 14, dateLabel: 'Termín další prohlídky',
+                placeholder: 'např. Praktický lékař – Jan', notePlaceholder: 'jméno lékaře, telefon, adresa ordinace…' },
   narozeniny: { freq: 'yearly',  remindDays: 7,  dateLabel: 'Datum narození', placeholder: 'např. Jana Nováková' },
   vyroci:     { freq: 'yearly',  remindDays: 7,  dateLabel: 'Datum (první rok)', placeholder: 'např. Svatba Jany a Petra' },
   svatek:     { freq: 'yearly',  remindDays: 1,  dateLabel: 'Den svátku', placeholder: 'jméno, např. Jana Nováková' },
@@ -502,11 +506,44 @@ function setType(type, applyDefaults) {
   document.querySelectorAll('.repeat-wrap').forEach(el => { el.hidden = !!t.yearly; });
   $('.price-row').hidden = !!t.yearly;
   $('.noyear-wrap').hidden = !t.yearly || !!t.noYear;
-  form.note.placeholder = t.yearly ? 'co má rád/a, nápady na dárek…' : 'číslo účtenky, kde je uložená, kontakt na servis…';
+  form.note.placeholder = d.notePlaceholder || (t.yearly ? 'co má rád/a, nápady na dárek…' : 'číslo účtenky, kde je uložená, kontakt na servis…');
+  renderPresets();
   if (applyDefaults) { form.freq.value = d.freq; form.interval.value = d.interval || 1; form.remindDays.value = d.remindDays; }
   syncInterval();
   updateNameDayHint(applyDefaults);
 }
+
+// Rychlá volba běžných preventivních prohlídek (dospělí, hrazeno pojišťovnou dle vyhl. 70/2012 Sb.).
+const PRESETS = {
+  prohlidka: [
+    { title: 'Praktický lékař', freq: 'yearly',  interval: 2, hint: 'každé 2 roky' },
+    { title: 'Zubař',           freq: 'monthly', interval: 6, hint: '2× ročně' },
+    { title: 'Gynekolog',       freq: 'yearly',  interval: 1, hint: 'každý rok' },
+    { title: 'Mamografie',      freq: 'yearly',  interval: 2, hint: 'ženy od 45 let, každé 2 roky' },
+    { title: 'Pracovnělékařská prohlídka', freq: 'yearly', interval: 2, hint: 'interval podle posudku' },
+  ],
+};
+let lastPresetTitle = '';
+function renderPresets() {
+  const list = state.editing ? null : PRESETS[currentType];
+  const box = $('#presets');
+  box.hidden = !list;
+  if (!list) return;
+  box.innerHTML = '<span class="hint">Rychlá volba:</span>' + list.map((p, i) =>
+    `<button type="button" class="chip small" data-preset="${i}" title="${esc(p.hint)}">${esc(p.title)} <small>${esc(p.hint)}</small></button>`).join('');
+}
+$('#presets').onclick = e => {
+  const b = e.target.closest('[data-preset]');
+  if (!b) return;
+  const p = PRESETS[currentType][Number(b.dataset.preset)];
+  // Název přepíšeme jen tehdy, když je prázdný nebo z předchozí rychlé volby.
+  if (!form.title.value.trim() || form.title.value === lastPresetTitle) form.title.value = p.title;
+  lastPresetTitle = p.title;
+  form.freq.value = p.freq; form.interval.value = p.interval;
+  syncInterval();
+  for (const c of $('#presets').querySelectorAll('.chip')) c.classList.toggle('on', c === b);
+  form.title.focus();
+};
 
 // U svátku doplníme datum podle jména (dokud ho uživatel nezmění ručně).
 function updateNameDayHint(fill = true) {
