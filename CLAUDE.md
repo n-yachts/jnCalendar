@@ -11,8 +11,9 @@ Nasazuje se přes GitHub Pages z větve `main`: https://n-yachts.github.io/jnCal
    (Playwright, napodobený Google, ukázková data, pevné datum 9. 11. 2026).
    Nová obrazovka nebo funkce → přidej snímek do skriptu i do `help.html`. Snímky si prohlédni.
 3. **README.md** – stručný přehled funkcí drž v souladu s nápovědou.
-4. **Verze**: `python tools/stamp.py` – doplní `?v=…` k CSS, JS modulům a obrázkům nápovědy,
-   jinak prohlížeče (GitHub Pages cache 10 min) drží staré soubory.
+4. **Verze**: `python tools/stamp.py` – doplní `?v=…` k CSS, JS modulům a obrázkům nápovědy
+   a změní `VERSION` v `sw.js` (nová mezipaměť), jinak prohlížeče drží staré soubory.
+   Nový soubor, který má fungovat offline, přidej do `SHELL` v `sw.js`.
 5. Uživatelské texty jsou česky. Nový typ položky = `TYPES`, `TYPE_GROUPS`, `DEFAULTS`
    (+ `PRESETS`, `OCCASION`, `DONE_TYPES`) v `js/catalog.js`, barva `.item.t-…` ve `styles.css`,
    úvod průvodce, nápověda (tabulka typů), README. Intervaly a lhůty v rychlé volbě ověř ve zdrojích.
@@ -26,5 +27,7 @@ Nasazuje se přes GitHub Pages z větve `main`: https://n-yachts.github.io/jnCal
   u smluv s výpovědní lhůtou se zapisuje poslední den výpovědi, položka nese výročí)
 - `js/auth.js` – Google Identity Services (token model), oprávnění `calendar.app.created` + `calendar.calendarlist.readonly`
 - `js/dates.js` – data bez časové zóny, opakování, připomínky; `js/svatky.js` – český kalendář jmen
+- `manifest.webmanifest`, `sw.js` (service worker „nejdřív síť“), `icons/` – instalace jako aplikace (PWA);
+  ikony generuje `tools/icons.py`
 - `server.ps1` + `start.cmd` – lokální server na `http://localhost:8080`
 - `tools/` – `screenshots.py` (náhledy do nápovědy), `stamp.py` (verze souborů)

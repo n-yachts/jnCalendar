@@ -25,4 +25,6 @@ for page in ('index.html', 'help.html'):
         r'\1?v=%s"' % ver)
 for f in glob.glob(os.path.join(ROOT, 'js', '*.js')):
     sub(f, r"from '(\./[a-z]+\.js)(\?v=[^']*)?'", r"from '\1?v=%s'" % ver)
+# Nová verze = nová mezipaměť service workeru (stará se smaže).
+sub(os.path.join(ROOT, 'sw.js'), r"const VERSION = '[^']*';", "const VERSION = '%s';" % ver)
 print('Verze', ver)

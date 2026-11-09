@@ -4,13 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>jnCalendar</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
-  <link rel="stylesheet" href="styles.css?v=20261109-1745">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#1f5f8b">
+  <meta name="description" content="Narozeniny, svátky, doklady, STK, pojistky, zdraví a údržba v Google kalendáři.">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="jnCalendar">
+  <link rel="stylesheet" href="styles.css?v=20261109-1800">
 </head>
 <body>
   <header class="topbar">
     <div class="brand"><span class="logo">📅</span> jnCalendar</div>
     <nav class="top-actions">
+      <button id="btn-install-top" class="ghost" hidden title="Nainstalovat jako aplikaci">📲<span class="lbl"> Nainstalovat</span></button>
       <button id="btn-refresh" class="ghost" hidden title="Načíst znovu z Google kalendáře">⟳<span class="lbl"> Obnovit</span></button>
       <button id="btn-settings" class="ghost" title="Nastavení">⚙︎<span class="lbl"> Nastavení</span></button>
       <a id="btn-help" class="btn ghost" href="help.html" target="_blank" rel="noopener" title="Nápověda">❓<span class="lbl">Nápověda</span></a>
@@ -163,6 +171,11 @@
         <button id="btn-import" class="ghost">⬆ Importovat ze souboru</button>
         <input id="import-file" type="file" accept=".json,application/json" hidden>
       </div>
+      <h3 class="sub">Aplikace v telefonu a počítači</h3>
+      <p id="install-info" class="hint"></p>
+      <div class="dlg-actions wrap">
+        <button id="btn-install" class="primary" hidden>📲 Nainstalovat aplikaci</button>
+      </div>
       <h3 class="sub">Účet</h3>
       <div class="dlg-actions wrap">
         <button id="btn-open-cal" class="ghost">Otevřít Google kalendář</button>
@@ -189,6 +202,6 @@
 
   <div id="toast" class="toast" role="status" popover="manual"></div>
 
-  <script type="module" src="js/app.js?v=20261109-1745"></script>
+  <script type="module" src="js/app.js?v=20261109-1800"></script>
 </body>
 </html>

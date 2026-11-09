@@ -254,3 +254,4 @@ a.btn:hover { border-color: var(--muted); }
 .item.t-lod { border-left-color: #1a237e; }
 .item.t-dum { border-left-color: #ff8f00; }
 .item.t-zahrada { border-left-color: #2e7d32; }
+.dlg-actions:has(> #btn-install[hidden]) { display: none; }

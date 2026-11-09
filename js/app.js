@@ -1,8 +1,8 @@
-import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1745';
-import { TYPES, TYPE_GROUPS, DEFAULTS, PRESETS, DONE_TYPES, OCCASION } from './catalog.js?v=20261109-1745';
-import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, eventStartDate, AuthError } from './calendar.js?v=20261109-1745';
-import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1745';
-import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1745';
+import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1800';
+import { TYPES, TYPE_GROUPS, DEFAULTS, PRESETS, DONE_TYPES, OCCASION } from './catalog.js?v=20261109-1800';
+import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, eventStartDate, AuthError } from './calendar.js?v=20261109-1800';
+import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1800';
+import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1800';
 
 // ---------- Stav ----------
 const LS = { client: 'jn.clientId', cal: 'jn.calendarId', step: 'jn.setupStep', range: 'jn.agendaRange', tab: 'jn.tab' };
@@ -225,6 +225,7 @@ async function loadAll() {
     ]);
     show('main');
     renderAll();
+    handleShortcut();
   } catch (e) {
     handleError(e);
   } finally {
@@ -746,6 +747,7 @@ $('#btn-settings').onclick = () => {
   $('#set-client').textContent = store.get(LS.client) || '—';
   $('#set-origin').textContent = location.origin;
   $('#set-cal').textContent = state.calendarId || '—';
+  updateInstallUi();
   $('#set-ver').textContent = new URL(import.meta.url).searchParams.get('v') || 'vývojová';
   $('#dlg-settings').showModal();
 };
@@ -877,6 +879,59 @@ $('#btn-import-go').onclick = async () => {
   renderAll();
   toast(failed ? `Importováno ${done}, nepodařilo se ${failed}.` : `Importováno ${done} položek ✓`, failed ? 'error' : '');
 };
+
+// ---------- Instalace jako aplikace (PWA) ----------
+let installPrompt = null;
+const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+function updateInstallUi() {
+  const can = !!installPrompt && !isStandalone();
+  $('#btn-install').hidden = !can;
+  $('#btn-install-top').hidden = !can;
+  $('#install-info').innerHTML = isStandalone()
+    ? '✓ jnCalendar běží jako nainstalovaná aplikace.'
+    : can
+      ? 'Nainstalujte si jnCalendar jako aplikaci: vlastní ikona na ploše, spuštění na celou obrazovku.'
+      : isIOS()
+        ? 'Na iPhonu a iPadu: v Safari klepněte na <b>Sdílet</b> a zvolte <b>Přidat na plochu</b>.'
+        : 'V Chromu na Androidu: menu <b>⋮</b> → <b>Nainstalovat aplikaci</b> (nebo <b>Přidat na plochu</b>). '
+          + 'Na počítači: ikona instalace vpravo v adresním řádku.';
+}
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();          // vlastní tlačítko místo automatické lišty
+  installPrompt = e;
+  updateInstallUi();
+});
+window.addEventListener('appinstalled', () => {
+  installPrompt = null;
+  updateInstallUi();
+  toast('jnCalendar je nainstalovaný ✓');
+});
+async function doInstall() {
+  if (!installPrompt) return;
+  installPrompt.prompt();
+  await installPrompt.userChoice.catch(() => null);
+  installPrompt = null;
+  updateInstallUi();
+}
+$('#btn-install').onclick = doInstall;
+$('#btn-install-top').onclick = doInstall;
+
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.warn('Service worker:', err));
+  });
+}
+
+// Zkratka z ikony aplikace („Přidat položku“) – ?akce=pridat
+function handleShortcut() {
+  const params = new URLSearchParams(location.search);
+  if (params.get('akce') !== 'pridat') return;
+  history.replaceState(null, '', location.pathname);
+  openItem(null);
+}
 
 // ---------- Start ----------
 async function start() {

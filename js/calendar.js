@@ -1,7 +1,7 @@
 // Tenká vrstva nad Google Calendar REST API (v3) a převod položek na události.
-import { TYPES } from './catalog.js?v=20261109-1745';
-import { getStoredToken, clearToken } from './auth.js?v=20261109-1745';
-import { addDays, toRRule, fromRRule, remindDaysToMinutes, minutesToRemindDays } from './dates.js?v=20261109-1745';
+import { TYPES } from './catalog.js?v=20261109-1800';
+import { getStoredToken, clearToken } from './auth.js?v=20261109-1800';
+import { addDays, toRRule, fromRRule, remindDaysToMinutes, minutesToRemindDays } from './dates.js?v=20261109-1800';
 
 const API = 'https://www.googleapis.com/calendar/v3';
 export const CALENDAR_NAME = 'jnCalendar';

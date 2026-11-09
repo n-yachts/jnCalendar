@@ -29,6 +29,7 @@ ať je aplikace spuštěná, nebo ne.
   termín se posune o interval od data provedení a aplikace si pamatuje, kdy to bylo naposledy.
 - **Položky:** správa všeho, co je v kalendáři, se souhrnem prošlých položek a měsíční ceny předplatných.
 - **Export a import** položek do souboru – přenos k jinému uživateli nebo záloha.
+- **Instalace do telefonu i počítače** jako aplikace s vlastní ikonou (PWA), bez Google Play.
 
 ## Spuštění
 
@@ -36,8 +37,12 @@ ať je aplikace spuštěná, nebo ne.
 
 **https://n-yachts.github.io/jnCalendar/**
 
-Běží na GitHub Pages z tohoto repozitáře. Na mobilu si ji přidejte na plochu přes menu
-prohlížeče → *Přidat na plochu*.
+Běží na GitHub Pages z tohoto repozitáře.
+
+**Instalace jako aplikace (PWA):** v Chromu na Androidu tlačítko *📲 Nainstalovat* v aplikaci
+nebo menu ⋮ → *Nainstalovat aplikaci*; na iPhonu Safari → Sdílet → *Přidat na plochu*;
+na počítači ikona instalace v adresním řádku. Aplikace dostane vlastní ikonu, spouští se
+na celou obrazovku a podržením ikony nabídne zkratku *Přidat položku*.
 
 ### Lokálně na počítači
 
@@ -132,7 +137,8 @@ js/catalog.js   typy položek, výchozí hodnoty, rychlá volba
 js/dates.js     práce s daty, opakování, připomínky
 js/svatky.js    český kalendář jmen (data z balíčku namedays, MIT licence)
 help.html       nápověda; náhledy obrazovek v help/img/
-tools/          screenshots.py (náhledy do nápovědy), stamp.py (verze souborů)
+manifest.webmanifest, sw.js, icons/   instalace jako aplikace (PWA)
+tools/          screenshots.py (náhledy do nápovědy), stamp.py (verze souborů), icons.py (ikony)
 CLAUDE.md       pokyny pro úpravy (nápověda, náhledy, verze)
 server.ps1      lokální server na portu 8080
 start.cmd       spouštěč
