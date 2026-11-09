@@ -1,8 +1,8 @@
-import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1815';
-import { TYPES, TYPE_GROUPS, DEFAULTS, PRESETS, DONE_TYPES, OCCASION } from './catalog.js?v=20261109-1815';
-import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, eventStartDate, AuthError } from './calendar.js?v=20261109-1815';
-import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1815';
-import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1815';
+import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1820';
+import { TYPES, TYPE_GROUPS, DEFAULTS, PRESETS, DONE_TYPES, OCCASION } from './catalog.js?v=20261109-1820';
+import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, eventStartDate, AuthError } from './calendar.js?v=20261109-1820';
+import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1820';
+import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1820';
 
 // ---------- Stav ----------
 const LS = { client: 'jn.clientId', cal: 'jn.calendarId', step: 'jn.setupStep', range: 'jn.agendaRange', tab: 'jn.tab' };
