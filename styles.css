@@ -207,3 +207,6 @@ dialog form, .dlg-pad { padding: 1.5rem; }
 @media (max-width: 560px) {
   .toolbar .chips { flex-basis: 100%; }
 }
+
+.features { list-style: none; padding: 0; margin: .5rem 0 1rem; }
+.features li { margin-bottom: .45rem; }

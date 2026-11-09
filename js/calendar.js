@@ -48,7 +48,7 @@ export async function ensureCalendar(knownId) {
     method: 'POST',
     body: {
       summary: CALENDAR_NAME,
-      description: 'Záruky, předplatná a údržba – spravuje aplikace jnCalendar.',
+      description: 'Narozeniny, svátky, výročí, záruky, předplatná a údržba – spravuje aplikace jnCalendar (https://n-yachts.github.io/jnCalendar/).',
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Prague',
     },
   });

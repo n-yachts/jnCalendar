@@ -39,15 +39,26 @@ function toast(msg, kind = '') {
 
 // ---------- Průvodce prvním spuštěním ----------
 const CONSOLE = 'https://console.cloud.google.com';
+const PUBLIC_URL = 'https://n-yachts.github.io/jnCalendar/';
 const SETUP = [
   {
     title: 'Vítejte',
     html: () => `
       <h1>Vítejte v jnCalendar</h1>
-      <p>Aplikace ukládá záruky, předplatná a údržbu do samostatného Google kalendáře
-         a sama nastaví připomínky. Data zůstávají jen ve vašem Google účtu.</p>
+      <p>Aplikace hlídá důležitá data a ukládá je do samostatného Google kalendáře
+         <b>jnCalendar</b> včetně připomínek:</p>
+      <ul class="features">
+        <li>🎂 <b>Narozeniny</b> a 💍 <b>výročí</b>: kolikáté jsou a připomínka předem</li>
+        <li>💐 <b>Svátky</b>: stačí napsat jméno, datum se doplní podle českého kalendáře</li>
+        <li>🛡️ <b>Záruky</b>, 🔁 <b>předplatná</b> a 🔧 <b>údržba</b>: konce záruk, platby, servisní termíny</li>
+        <li>📋 <b>Přehled</b>: všechno nadcházející seřazené podle data na jednom místě</li>
+      </ul>
+      <p>Data zůstávají jen ve vašem Google účtu. Aplikace běží na webu
+         <a href="${PUBLIC_URL}" target="_blank" rel="noopener">${PUBLIC_URL.replace('https://', '')}</a>
+         i lokálně na počítači (<code>start.cmd</code>).</p>
       <p>Než začneme, je potřeba jednou (asi 10 minut) připravit přístup v <b>Google Cloud</b>.
          Je to zdarma a nepotřebujete platební kartu. Průvodce vás provede krok za krokem.</p>
+      <p><button type="button" class="ghost small" data-goto="4">Už mám Client ID, přeskočit nastavení →</button></p>
       <p class="hint">Tip: odkazy se otevírají v nové záložce. Pokud máte víc Google účtů,
          zkontrolujte vpravo nahoře v konzoli, že jste ve správném.</p>`,
   },
@@ -106,13 +117,17 @@ const SETUP = [
           <div class="copyline"><code id="origin-val">${esc(location.origin)}</code>
             <button type="button" class="ghost small" data-copy="#origin-val">Kopírovat</button></div>
         </li>
+        <li>Používáte-li aplikaci na webu i lokálně, přidejte obě adresy:
+            <code>https://n-yachts.github.io</code> a <code>http://localhost:8080</code>
+            (vždy jen doménu, bez cesty a bez lomítka na konci).</li>
         <li>Pole <b>Autorizované URI přesměrování</b> nechte prázdné a klikněte na <b>Vytvořit</b>.</li>
         <li>Zkopírujte <b>Client ID</b> (končí na <code>.apps.googleusercontent.com</code>) a vložte ho sem:</li>
       </ol>
       <input id="client-input" class="mono" placeholder="123456789-abc….apps.googleusercontent.com"
              value="${esc(store.get(LS.client) || '')}" spellcheck="false" autocomplete="off">
       <p id="client-err" class="error" hidden></p>
-      <p class="hint">Client ID není tajný, client secret aplikace nepotřebuje. Nové nastavení se někdy projeví až za pár minut.</p>`,
+      <p class="hint">Client ID není tajný, client secret aplikace nepotřebuje. Nové nastavení se někdy projeví až za pár minut.
+         Pokud už Client ID máte (třeba z jiného počítače nebo z lokální verze), stačí ho sem vložit a předchozí kroky přeskočit.</p>`,
     validate: () => {
       const v = $('#client-input').value.trim();
       const ok = /^[0-9]+-[a-z0-9]+\.apps\.googleusercontent\.com$/i.test(v);
@@ -149,6 +164,10 @@ function renderSetup() {
   $('#client-input')?.focus();
 }
 
+$('#setup-body').addEventListener('click', e => {
+  const b = e.target.closest('[data-goto]');
+  if (b) { setupIdx = Number(b.dataset.goto); renderSetup(); }
+});
 $('#setup-back').onclick = () => { if (setupIdx > 0) { setupIdx--; renderSetup(); } };
 $('#setup-next').onclick = async () => {
   const step = SETUP[setupIdx];
@@ -266,7 +285,7 @@ function renderMain() {
     .sort((a, b) => (a.days < 0) - (b.days < 0) || (a.days < 0 ? b.days - a.days : a.days - b.days));
 
   if (!all.length) {
-    $('#list').innerHTML = `<div class="empty"><p>Zatím tu nic není.</p><p class="muted">Přidejte první záruku, předplatné nebo úkon údržby.</p>
+    $('#list').innerHTML = `<div class="empty"><p>Zatím tu nic není.</p><p class="muted">Přidejte narozeniny, svátek, výročí, záruku, předplatné nebo úkon údržby.</p>
       <button class="primary" data-action="add">+ Přidat první položku</button></div>`;
     return;
   }
