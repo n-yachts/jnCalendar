@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jnCalendar</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo">📅</span> jnCalendar</div>
+    <nav class="top-actions">
+      <button id="btn-refresh" class="ghost" hidden title="Načíst znovu z Google kalendáře">⟳ Obnovit</button>
+      <button id="btn-settings" class="ghost" title="Nastavení">⚙︎ Nastavení</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Upozornění při otevření ze souboru -->
+    <section id="view-file" class="card narrow" hidden>
+      <h1>Spusťte aplikaci přes start.cmd</h1>
+      <p>Google přihlášení nefunguje u stránky otevřené přímo ze souboru. Spusťte <code>start.cmd</code> ve složce projektu; aplikace se otevře na <code>http://localhost:8080</code>.</p>
+    </section>
+
+    <!-- Průvodce prvním spuštěním -->
+    <section id="view-setup" class="card narrow" hidden>
+      <div class="steps" id="setup-steps"></div>
+      <div id="setup-body"></div>
+      <div class="wizard-nav">
+        <button id="setup-back" class="ghost">← Zpět</button>
+        <button id="setup-next" class="primary">Pokračovat →</button>
+      </div>
+    </section>
+
+    <!-- Přihlášení -->
+    <section id="view-signin" class="card narrow center" hidden>
+      <h1>Přihlášení</h1>
+      <p class="muted">Aplikace potřebuje přístup ke kalendáři „jnCalendar“, který si sama založí. Do vašich ostatních kalendářů nezasahuje.</p>
+      <button id="btn-signin" class="primary big">Přihlásit se přes Google</button>
+      <p class="hint">Pokud uvidíte „Google tuto aplikaci neověřil“, klikněte na <b>Pokračovat</b>. Je to vaše vlastní aplikace.</p>
+    </section>
+
+    <!-- Hlavní přehled -->
+    <section id="view-main" hidden>
+      <div class="tabs" role="tablist">
+        <button class="tab on" data-tab="agenda" role="tab">📋 Přehled</button>
+        <button class="tab" data-tab="items" role="tab">🗂️ Položky</button>
+        <span class="spacer"></span>
+        <button class="primary" data-action="add">+ Přidat</button>
+      </div>
+
+      <div id="pane-agenda">
+        <p class="nameday" id="nameday"></p>
+        <div class="toolbar">
+          <div class="chips" id="agenda-types"></div>
+          <div class="seg" id="agenda-range"></div>
+        </div>
+        <div id="agenda" class="agenda"></div>
+      </div>
+
+      <div id="pane-items" hidden>
+      <div class="stats" id="stats"></div>
+      <div class="toolbar">
+        <div class="chips" id="filters"></div>
+        <input id="search" type="search" placeholder="Hledat…" aria-label="Hledat">
+      </div>
+      <div id="list" class="list"></div>
+      </div>
+    </section>
+
+    <div id="loading" class="loading" hidden><div class="spinner"></div></div>
+  </main>
+
+  <!-- Formulář položky -->
+  <dialog id="dlg-item">
+    <form id="form-item" method="dialog">
+      <h2 id="item-title">Nová položka</h2>
+      <div class="type-pick" id="type-pick"></div>
+      <label>Název
+        <input name="title" required maxlength="120" placeholder="např. Pračka Bosch, Netflix, Výměna oleje">
+        <span id="nameday-hint" class="hint" hidden></span>
+      </label>
+      <div class="row">
+        <label><span id="date-label">Datum</span>
+          <input name="date" type="date" required>
+        </label>
+        <label class="check noyear-wrap" hidden><input name="noYear" type="checkbox"> rok neznám</label>
+        <label class="repeat-wrap">Opakování
+          <select name="freq">
+            <option value="none">Neopakovat</option>
+            <option value="monthly">Každý měsíc</option>
+            <option value="yearly">Každý rok</option>
+          </select>
+        </label>
+        <label class="interval-wrap repeat-wrap">Každých
+          <input name="interval" type="number" min="1" max="60" value="1">
+        </label>
+      </div>
+      <div class="row">
+        <label>Připomenout (dní předem)
+          <input name="remindDays" type="number" min="0" max="28" value="7">
+        </label>
+        <label class="check"><input name="emailReminder" type="checkbox"> i e-mailem</label>
+      </div>
+      <div class="row price-row">
+        <label>Cena
+          <input name="price" type="number" min="0" step="0.01" placeholder="nepovinné">
+        </label>
+        <label>Měna
+          <select name="currency"><option>Kč</option><option>€</option><option>$</option></select>
+        </label>
+      </div>
+      <label>Poznámka
+        <textarea name="note" rows="3" maxlength="900" placeholder="číslo účtenky, kde je uložená, kontakt na servis…"></textarea>
+      </label>
+      <p class="hint">Připomínka přijde v 9:00 zvolený počet dní předem (Google dovoluje nejvýš 28 dní).</p>
+      <div class="dlg-actions">
+        <button type="button" id="btn-delete" class="danger" hidden>Smazat</button>
+        <span class="spacer"></span>
+        <button type="button" class="ghost" data-close>Zrušit</button>
+        <button type="submit" class="primary">Uložit</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Nastavení -->
+  <dialog id="dlg-settings">
+    <div class="dlg-pad">
+      <h2>Nastavení</h2>
+      <dl class="kv">
+        <dt>Client ID</dt><dd id="set-client" class="mono"></dd>
+        <dt>Adresa aplikace</dt><dd id="set-origin" class="mono"></dd>
+        <dt>Kalendář</dt><dd id="set-cal" class="mono"></dd>
+      </dl>
+      <div class="dlg-actions wrap">
+        <button id="btn-open-cal" class="ghost">Otevřít Google kalendář</button>
+        <button id="btn-signout" class="ghost">Odhlásit</button>
+        <button id="btn-reset" class="danger">Znovu spustit průvodce</button>
+        <span class="spacer"></span>
+        <button class="primary" data-close>Zavřít</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" popover="manual"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
