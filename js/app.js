@@ -1,7 +1,8 @@
-import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1510';
-import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, TYPES, AuthError } from './calendar.js?v=20261109-1510';
-import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1510';
-import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1510';
+import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1745';
+import { TYPES, TYPE_GROUPS, DEFAULTS, PRESETS, DONE_TYPES, OCCASION } from './catalog.js?v=20261109-1745';
+import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, eventStartDate, AuthError } from './calendar.js?v=20261109-1745';
+import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1745';
+import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1745';
 
 // ---------- Stav ----------
 const LS = { client: 'jn.clientId', cal: 'jn.calendarId', step: 'jn.setupStep', range: 'jn.agendaRange', tab: 'jn.tab' };
@@ -53,11 +54,13 @@ const SETUP = [
       <p>Aplikace hlídá důležitá data a ukládá je do samostatného Google kalendáře
          <b>jnCalendar</b> včetně připomínek:</p>
       <ul class="features">
-        <li>🎂 <b>Narozeniny</b> a 💍 <b>výročí</b>: kolikáté jsou a připomínka předem</li>
-        <li>💐 <b>Svátky</b>: stačí napsat jméno, datum se doplní podle českého kalendáře</li>
-        <li>🪪 <b>Doklady</b> a 🚗 <b>technické kontroly</b>: kdy končí platnost pasu, řidičáku či STK</li>
-        <li>🩺 <b>Lékařské prohlídky</b>: praktik, zubař, gynekolog… s obvyklými intervaly</li>
-        <li>🛡️ <b>Záruky</b>, 🔁 <b>předplatná</b> a 🔧 <b>údržba</b>: konce záruk, platby, servisní termíny</li>
+        <li>🎂 <b>Narozeniny</b>, 💐 <b>svátky</b> a 💍 <b>výročí</b>: kolikáté jsou, svátek podle jména</li>
+        <li>🪪 <b>Doklady</b>, 🚗 <b>STK</b>, 🏛️ <b>daně a poplatky</b>: konce platnosti a termíny</li>
+        <li>📄 <b>Pojištění a smlouvy</b>: připomene poslední den pro výpověď, ne až výročí</li>
+        <li>🩺 <b>Zdraví</b> a 🐾 <b>zvířata</b>: prohlídky, očkování, veterinář</li>
+        <li>🚙 <b>Auto</b>, ⛵ <b>loď</b>, 🏠 <b>domácnost</b>, 🌳 <b>zahrada</b>: servis, revize, sezónní práce</li>
+        <li>🔁 <b>Předplatná</b> a 🛡️ <b>záruky</b>: platby a konce záruk</li>
+        <li>⚡ <b>Rychlá volba</b> s obvyklými intervaly a tlačítko <b>✓ Hotovo</b>, které posune další termín</li>
         <li>📋 <b>Přehled</b>: všechno nadcházející seřazené podle data na jednom místě</li>
       </ul>
       <p>Data zůstávají jen ve vašem Google účtu. Aplikace běží na webu
@@ -249,7 +252,7 @@ function handleError(e) {
 // ---------- Přehled ----------
 function enrich(it) {
   const today = todayStr();
-  const next = nextOccurrence(it.date, it.repeat, today);
+  const next = nextOccurrence(eventStartDate(it), it.repeat, today);
   return { ...it, next, days: daysBetween(today, next) };
 }
 
@@ -282,6 +285,7 @@ function renderMain() {
   const counts = { all: all.length };
   for (const i of all) counts[i.type] = (counts[i.type] || 0) + 1;
   $('#filters').innerHTML = [['all', 'Vše', ''], ...Object.entries(TYPES).map(([k, t]) => [k, t.short || t.label, t.icon])]
+    .filter(([k]) => k === 'all' || k === state.filter || counts[k])
     .map(([k, label, icon]) => `<button class="chip ${state.filter === k ? 'on' : ''}" data-filter="${k}">${icon} ${label} <small>${counts[k] || 0}</small></button>`)
     .join('');
 
@@ -293,7 +297,7 @@ function renderMain() {
     .sort((a, b) => (a.days < 0) - (b.days < 0) || (a.days < 0 ? b.days - a.days : a.days - b.days));
 
   if (!all.length) {
-    $('#list').innerHTML = `<div class="empty"><p>Zatím tu nic není.</p><p class="muted">Přidejte narozeniny, svátek, výročí, doklad, STK, prohlídku, záruku, předplatné nebo úkon údržby.</p>
+    $('#list').innerHTML = `<div class="empty"><p>Zatím tu nic není.</p><p class="muted">Přidejte narozeniny, svátky, doklady, STK, pojistky, prohlídky, údržbu auta, lodi či domu…</p>
       <button class="primary" data-action="add">+ Přidat první položku</button></div>`;
     return;
   }
@@ -309,13 +313,14 @@ function renderMain() {
     const label = i.type === 'zaruka' ? (i.days < 0 ? 'záruka skončila' : 'záruka končí')
       : i.type === 'doklad' ? (i.days < 0 ? 'platnost skončila' : 'platnost končí')
       : i.type === 'stk' ? (i.days < 0 ? 'STK propadla' : 'STK do')
+      : i.type === 'smlouva' ? (i.noticeWeeks ? 'výpověď do' : 'výročí')
       : TYPES[i.type]?.yearly ? occasion(i, i.next) : '';
     return `
       <article class="item t-${i.type}" data-id="${esc(i.id)}" tabindex="0">
         <div class="icon">${t.icon}</div>
         <div class="body">
           <div class="name">${esc(i.title)}</div>
-          <div class="meta">${t.label}${rep ? ` · ${rep}` : ''}${i.lastDone ? ` · naposledy ${formatCz(i.lastDone)}` : ''}${price ? ` · ${price}` : ''}${i.note ? ` · <span class="note">${esc(i.note)}</span>` : ''}</div>
+          <div class="meta">${t.label}${i.what ? ` · ${esc(i.what)}` : ''}${rep ? ` · ${rep}` : ''}${i.lastDone ? ` · naposledy ${formatCz(i.lastDone)}` : ''}${price ? ` · ${price}` : ''}${i.note ? ` · <span class="note">${esc(i.note)}</span>` : ''}</div>
         </div>
         <div class="when ${cls}">
           <b>${relativeCz(i.days)}</b>
@@ -356,13 +361,10 @@ function occasion(item, onDate) {
     case 'narozeniny': return n > 0 ? `${n}. narozeniny` : 'narozeniny';
     case 'vyroci':     return n > 0 ? `${n}. výročí` : 'výročí';
     case 'svatek':     return 'svátek';
-    case 'zaruka':     return 'konec záruky';
-    case 'doklad':     return 'konec platnosti';
-    case 'stk':        return 'termín technické kontroly';
     case 'predplatne': return item.price ? `platba ${Number(item.price).toLocaleString('cs-CZ')} ${item.currency || 'Kč'}` : 'platba';
-    case 'udrzba':     return 'údržba';
-    case 'prohlidka':  return 'preventivní prohlídka';
-    default:           return '';
+    case 'smlouva':
+      return item.noticeWeeks ? `poslední den pro výpověď · výročí ${formatCz(addDays(onDate, 7 * item.noticeWeeks)).replace(/ \d{4}$/, '')}` : 'výročí smlouvy';
+    default:           return item.what || OCCASION[item.type] || '';
   }
 }
 
@@ -483,27 +485,18 @@ $('#agenda').onclick = e => {
 $('#agenda').onkeydown = e => { if (e.key === 'Enter' && e.target.matches('li')) e.target.click(); };
 
 // ---------- Formulář ----------
-const DEFAULTS = {
-  zaruka:     { freq: 'none',    remindDays: 28, dateLabel: 'Konec záruky' },
-  doklad:     { freq: 'none',    remindDays: 28, dateLabel: 'Platnost do', placeholder: 'např. Cestovní pas – Jan, Řidičský průkaz, Průkaz vůdce plavidla', notePlaceholder: 'číslo dokladu, kde se vyřizuje, co s sebou…' },
-  stk:        { freq: 'yearly', interval: 2, remindDays: 28, dateLabel: 'Platnost STK do', placeholder: 'např. Škoda Octavia 1AB 2345, přívěs', notePlaceholder: 'STK stanice, číslo protokolu, závady k opravě…' },
-  predplatne: { freq: 'monthly', remindDays: 3,  dateLabel: 'Další platba' },
-  udrzba:     { freq: 'yearly',  remindDays: 14, dateLabel: 'Termín' },
-  prohlidka:  { freq: 'yearly', interval: 2, remindDays: 14, dateLabel: 'Termín další prohlídky',
-                placeholder: 'např. Praktický lékař – Jan', notePlaceholder: 'jméno lékaře, telefon, adresa ordinace…' },
-  narozeniny: { freq: 'yearly',  remindDays: 7,  dateLabel: 'Datum narození', placeholder: 'např. Jana Nováková' },
-  vyroci:     { freq: 'yearly',  remindDays: 7,  dateLabel: 'Datum (první rok)', placeholder: 'např. Svatba Jany a Petra' },
-  svatek:     { freq: 'yearly',  remindDays: 1,  dateLabel: 'Den svátku', placeholder: 'jméno, např. Jana Nováková' },
-  jine:       { freq: 'none',    remindDays: 7,  dateLabel: 'Datum' },
-};
-
 const form = $('#form-item');
 let currentType = 'zaruka';
 
 function setType(type, applyDefaults) {
   currentType = type;
-  $('#type-pick').innerHTML = Object.entries(TYPES).map(([k, t]) =>
-    `<button type="button" class="chip ${k === type ? 'on' : ''}" data-type="${k}">${t.icon} ${t.short || t.label}</button>`).join('');
+  $('#type-pick').innerHTML = TYPE_GROUPS.map(([group, keys]) =>
+    `<div class="tp-group"><span class="tp-label">${group}</span><div class="tp-chips">` + keys.map(k => {
+      const t = TYPES[k];
+      return `<button type="button" class="chip ${k === type ? 'on' : ''}" data-type="${k}">${t.icon} ${t.short || t.label}</button>`;
+    }).join('') + '</div></div>').join('');
+  // Druh z rychlé volby platí jen pro typ, ke kterému patří.
+  presetWhat = state.editing && state.editing.type === type ? (state.editing.what || '') : '';
   const d = DEFAULTS[type];
   const t = TYPES[type];
   $('#date-label').textContent = d.dateLabel;
@@ -514,42 +507,74 @@ function setType(type, applyDefaults) {
   $('.noyear-wrap').hidden = !t.yearly || !!t.noYear;
   form.note.placeholder = d.notePlaceholder || (t.yearly ? 'co má rád/a, nápady na dárek…' : 'číslo účtenky, kde je uložená, kontakt na servis…');
   renderPresets();
-  if (applyDefaults) { form.freq.value = d.freq; form.interval.value = d.interval || 1; form.remindDays.value = d.remindDays; }
+  $('.notice-wrap').hidden = !t.notice;
+  if (applyDefaults) {
+    form.freq.value = d.freq; form.interval.value = d.interval || 1; form.remindDays.value = d.remindDays;
+    form.noticeWeeks.value = d.noticeWeeks ?? 0;
+  }
   syncInterval();
+  updateNoticeInfo();
   updateNameDayHint(applyDefaults);
 }
 
-// Rychlá volba běžných preventivních prohlídek (dospělí, hrazeno pojišťovnou dle vyhl. 70/2012 Sb.).
-const PRESETS = {
-  prohlidka: [
-    { title: 'Praktický lékař', freq: 'yearly',  interval: 2, hint: 'každé 2 roky' },
-    { title: 'Zubař',           freq: 'monthly', interval: 6, hint: '2× ročně' },
-    { title: 'Gynekolog',       freq: 'yearly',  interval: 1, hint: 'každý rok' },
-    { title: 'Mamografie',      freq: 'yearly',  interval: 2, hint: 'ženy od 45 let, každé 2 roky' },
-    { title: 'Pracovnělékařská prohlídka', freq: 'yearly', interval: 2, hint: 'interval podle posudku' },
-  ],
-};
 let lastPresetTitle = '';
+let presetWhat = '';   // „druh“ z rychlé volby (např. očkování), uloží se k položce
 function renderPresets() {
   const list = state.editing ? null : PRESETS[currentType];
   const box = $('#presets');
   box.hidden = !list;
   if (!list) return;
-  box.innerHTML = '<span class="hint">Rychlá volba:</span>' + list.map((p, i) =>
-    `<button type="button" class="chip small" data-preset="${i}" title="${esc(p.hint)}">${esc(p.title)} <small>${esc(p.hint)}</small></button>`).join('');
+  // Rozbalovací seznam se skupinami (optgroup) – vejde se i dlouhý seznam.
+  let html = '<option value="">— vyberte a formulář se vyplní —</option>';
+  let open = false;
+  list.forEach((p, i) => {
+    if (p.group) { html += `${open ? '</optgroup>' : ''}<optgroup label="${esc(p.group)}">`; open = true; }
+    else html += `<option value="${i}">${esc(p.title)}</option>`;
+  });
+  if (open) html += '</optgroup>';
+  box.innerHTML = `<label>Rychlá volba<select id="preset-select">${html}</select></label>
+    <p id="preset-hint" class="hint"></p>`;
 }
-$('#presets').onclick = e => {
-  const b = e.target.closest('[data-preset]');
-  if (!b) return;
-  const p = PRESETS[currentType][Number(b.dataset.preset)];
+
+// Nejbližší datum s daným měsícem a dnem (dnes nebo později).
+function nextMonthDay([m, d]) {
+  const today = todayStr();
+  let y = parseDate(today).y;
+  let c = formatDate({ y, m, d });
+  if (c < today) c = formatDate({ y: y + 1, m, d });
+  return c;
+}
+
+$('#presets').onchange = e => {
+  if (e.target.id !== 'preset-select' || e.target.value === '') return;
+  const p = PRESETS[currentType][Number(e.target.value)];
+  $('#preset-hint').textContent = p.hint ? `ℹ︎ ${p.hint}` : '';
   // Název přepíšeme jen tehdy, když je prázdný nebo z předchozí rychlé volby.
   if (!form.title.value.trim() || form.title.value === lastPresetTitle) form.title.value = p.title;
   lastPresetTitle = p.title;
-  form.freq.value = p.freq; form.interval.value = p.interval;
+  presetWhat = p.what || '';
+  form.freq.value = p.freq; form.interval.value = p.interval || 1;
+  if (p.remind != null) form.remindDays.value = p.remind;
+  else form.remindDays.value = DEFAULTS[currentType].remindDays;
+  if (p.notice != null) form.noticeWeeks.value = p.notice;
+  if (p.md && form.date.dataset.manual !== '1') form.date.value = nextMonthDay(p.md);
   syncInterval();
-  for (const c of $('#presets').querySelectorAll('.chip')) c.classList.toggle('on', c === b);
+  updateNoticeInfo();
   form.title.focus();
 };
+
+// U smluv: kdy je poslední den pro výpověď.
+function updateNoticeInfo() {
+  const info = $('#notice-info');
+  if (!TYPES[currentType]?.notice) return;
+  const w = Math.max(0, parseInt(form.noticeWeeks.value, 10) || 0);
+  if (!form.date.value) { info.textContent = ''; return; }
+  info.innerHTML = w
+    ? `Do kalendáře se zapíše <b>poslední den pro výpověď: ${formatCz(addDays(form.date.value, -7 * w))}</b>.`
+    : 'Do kalendáře se zapíše přímo datum výročí / konce smlouvy.';
+}
+form.noticeWeeks.addEventListener('input', updateNoticeInfo);
+form.date.addEventListener('input', updateNoticeInfo);
 
 // U svátku doplníme datum podle jména (dokud ho uživatel nezmění ručně).
 function updateNameDayHint(fill = true) {
@@ -590,7 +615,10 @@ function openItem(item) {
     form.currency.value = item.currency || 'Kč';
     form.note.value = item.note;
     form.noYear.checked = !!item.noYear;
+    form.noticeWeeks.value = item.noticeWeeks || 0;
+    presetWhat = item.what || '';
     updateNameDayHint(false);
+    updateNoticeInfo();
   } else {
     const pref = state.tab === 'agenda' ? (state.agendaFilter === 'people' ? 'narozeniny' : state.agendaFilter) : state.filter;
     setType(pref in TYPES ? pref : 'zaruka', true);
@@ -604,7 +632,6 @@ function openItem(item) {
 
 // ---------- Hotovo (STK, prohlídky, údržba) ----------
 // Po provedení posune termín: datum provedení + interval opakování.
-const DONE_TYPES = ['stk', 'prohlidka', 'udrzba'];
 
 function doneNext(item, doneDate) {
   const months = repeatMonths(item.repeat);
@@ -664,6 +691,8 @@ form.onsubmit = async e => {
     currency: form.currency.value,
     note: form.note.value.trim(),
     lastDone: state.editing?.lastDone || '',
+    what: presetWhat,
+    noticeWeeks: TYPES[currentType]?.notice ? Math.min(52, Math.max(0, parseInt(form.noticeWeeks.value, 10) || 0)) : 0,
   };
   if (!item.title || !item.date) return;
   const t = TYPES[item.type];
@@ -746,7 +775,7 @@ document.addEventListener('click', e => {
 });
 
 // ---------- Export / import ----------
-const EXPORT_FIELDS = ['type', 'title', 'date', 'repeat', 'remindDays', 'emailReminder', 'price', 'currency', 'note', 'noYear', 'lastDone'];
+const EXPORT_FIELDS = ['type', 'title', 'date', 'repeat', 'remindDays', 'emailReminder', 'price', 'currency', 'note', 'noYear', 'lastDone', 'what', 'noticeWeeks'];
 const itemKey = i => `${i.type}|${String(i.title).trim().toLowerCase()}`;
 let importQueue = [];
 
@@ -793,6 +822,8 @@ function cleanImported(raw) {
     note: typeof raw.note === 'string' ? raw.note.slice(0, 900) : '',
     noYear: !!raw.noYear,
     lastDone: typeof raw.lastDone === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.lastDone) ? raw.lastDone : '',
+    what: typeof raw.what === 'string' ? raw.what.slice(0, 60) : '',
+    noticeWeeks: TYPES[type]?.notice ? Math.min(52, Math.max(0, parseInt(raw.noticeWeeks, 10) || 0)) : 0,
   };
 }
 

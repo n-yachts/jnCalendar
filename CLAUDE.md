@@ -13,14 +13,17 @@ Nasazuje se přes GitHub Pages z větve `main`: https://n-yachts.github.io/jnCal
 3. **README.md** – stručný přehled funkcí drž v souladu s nápovědou.
 4. **Verze**: `python tools/stamp.py` – doplní `?v=…` k CSS, JS modulům a obrázkům nápovědy,
    jinak prohlížeče (GitHub Pages cache 10 min) drží staré soubory.
-5. Uživatelské texty jsou česky. Nový typ položky = `TYPES` v `js/calendar.js`, `DEFAULTS`
-   a `occasion()` v `js/app.js`, barva `.item.t-…` ve `styles.css`, úvod průvodce, nápověda, README.
+5. Uživatelské texty jsou česky. Nový typ položky = `TYPES`, `TYPE_GROUPS`, `DEFAULTS`
+   (+ `PRESETS`, `OCCASION`, `DONE_TYPES`) v `js/catalog.js`, barva `.item.t-…` ve `styles.css`,
+   úvod průvodce, nápověda (tabulka typů), README. Intervaly a lhůty v rychlé volbě ověř ve zdrojích.
 
 ## Struktura
 
 - `index.html`, `styles.css` – aplikace; `help.html` – nápověda (odkaz v hlavičce, v 1. kroku průvodce a u přihlášení)
 - `js/app.js` – UI, průvodce, přehled, formulář, Hotovo, export/import
-- `js/calendar.js` – REST volání, převod položka ↔ událost (data v `extendedProperties.private`)
+- `js/catalog.js` – typy, skupiny, výchozí hodnoty, rychlá volba
+- `js/calendar.js` – REST volání, převod položka ↔ událost (data v `extendedProperties.private`;
+  u smluv s výpovědní lhůtou se zapisuje poslední den výpovědi, položka nese výročí)
 - `js/auth.js` – Google Identity Services (token model), oprávnění `calendar.app.created` + `calendar.calendarlist.readonly`
 - `js/dates.js` – data bez časové zóny, opakování, připomínky; `js/svatky.js` – český kalendář jmen
 - `server.ps1` + `start.cmd` – lokální server na `http://localhost:8080`

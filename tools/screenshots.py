@@ -40,8 +40,25 @@ DEMO = [
     dict(type='doklad', title='Cestovní pas – Jan', date='2027-01-20', remindDays=28),
     dict(type='stk', title='Škoda Octavia 1AB 2345', date='2026-12-15', repeat=dict(freq='yearly', interval=2),
          remindDays=28, lastDone='2024-12-15'),
-    dict(type='prohlidka', title='Zubař', date='2026-11-26', repeat=dict(freq='monthly', interval=6), remindDays=14),
-    dict(type='prohlidka', title='Praktický lékař', date='2027-01-18', repeat=dict(freq='yearly', interval=2), remindDays=14),
+    dict(type='prohlidka', title='Zubař', date='2026-11-26', repeat=dict(freq='monthly', interval=6), remindDays=14,
+         what='preventivní prohlídka'),
+    dict(type='prohlidka', title='Praktický lékař', date='2027-01-18', repeat=dict(freq='yearly', interval=2), remindDays=14,
+         what='preventivní prohlídka'),
+    dict(type='prohlidka', title='Tetanus', date='2031-05-01', repeat=dict(freq='yearly', interval=15), remindDays=28, what='očkování'),
+    dict(type='smlouva', title='Povinné ručení – Octavia', date='2027-01-20', repeat=dict(freq='yearly', interval=1),
+         remindDays=14, noticeWeeks=6, note='Pojišťovna XY, smlouva 123456'),
+    dict(type='smlouva', title='Pojištění plavidla', date='2027-04-01', repeat=dict(freq='yearly', interval=1),
+         remindDays=14, noticeWeeks=6),
+    dict(type='dane', title='Daň z nemovitých věcí – platba', date='2027-05-31', repeat=dict(freq='yearly', interval=1), remindDays=14),
+    dict(type='auto', title='Přezutí na zimní pneu – Octavia', date='2026-11-14', repeat=dict(freq='yearly', interval=1), remindDays=7),
+    dict(type='lod', title='Zazimování', date='2026-11-28', repeat=dict(freq='yearly', interval=1), remindDays=14),
+    dict(type='lod', title='Servis motoru', date='2027-02-15', repeat=dict(freq='yearly', interval=1), remindDays=14,
+         lastDone='2026-02-20'),
+    dict(type='lod', title='Spuštění na vodu', date='2027-04-15', repeat=dict(freq='yearly', interval=1), remindDays=14),
+    dict(type='dum', title='Kontrola a čištění komína', date='2026-12-03', repeat=dict(freq='yearly', interval=1), remindDays=14),
+    dict(type='dum', title='Hasicí přístroj – kontrola', date='2027-01-10', repeat=dict(freq='yearly', interval=1), remindDays=14),
+    dict(type='zahrada', title='Zazimování zahradní vody', date='2026-11-15', repeat=dict(freq='yearly', interval=1), remindDays=7),
+    dict(type='zvire', title='Očkování proti vzteklině – Rex', date='2027-01-05', repeat=dict(freq='yearly', interval=1), remindDays=7),
     dict(type='zaruka', title='Pračka Bosch', date='2026-11-20', remindDays=28, note='Účtenka v šuplíku v kuchyni'),
     dict(type='zaruka', title='Notebook', date='2026-10-01', remindDays=28),
     dict(type='predplatne', title='Netflix', date='2026-01-12', repeat=dict(freq='monthly', interval=1), remindDays=3, price='329'),
@@ -214,9 +231,19 @@ def main():
         shot(pg, 'formular-svatek')
         pg.click('#type-pick [data-type=prohlidka]')
         pg.fill('[name=title]', '')
-        pg.click('#presets [data-preset="1"]')
+        pg.select_option('#preset-select', label='Zubař')
         pg.fill('[name=date]', '2027-05-20')
         shot(pg, 'formular-prohlidky')
+        pg.click('#type-pick [data-type=smlouva]')
+        pg.select_option('#preset-select', label='Povinné ručení')
+        pg.fill('[name=title]', 'Povinné ručení – Fabia')
+        pg.fill('[name=date]', '2027-03-01')
+        pg.dispatch_event('[name=date]', 'input')
+        shot(pg, 'formular-smlouva')
+        pg.click('#type-pick [data-type=lod]')
+        pg.fill('[name=title]', '')
+        pg.select_option('#preset-select', label='Výměna impeleru')
+        shot(pg, 'formular-lod')
         pg.keyboard.press('Escape')
 
         pg.click('.day li:has-text("Škoda")')

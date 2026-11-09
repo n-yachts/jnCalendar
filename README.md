@@ -1,7 +1,8 @@
 # jnCalendar
 
-Malá webová aplikace na **narozeniny, svátky, výročí, platnost dokladů, technické kontroly,
-lékařské prohlídky, záruky, předplatná a údržbu** (třeba lodi).
+Malá webová aplikace, která hlídá periodické události: **narozeniny, svátky, výročí, platnost dokladů,
+STK, pojistky a smlouvy, daně, prohlídky a očkování, péči o zvířata, údržbu auta, lodi, domu
+a zahrady, předplatná a záruky**.
 Každá položka se uloží jako celodenní událost do samostatného Google kalendáře **jnCalendar**
 a dostane připomínku. Připomínky tak chodí z Google kalendáře do telefonu i počítače,
 ať je aplikace spuštěná, nebo ne.
@@ -14,19 +15,20 @@ ať je aplikace spuštěná, nebo ne.
 - **Přehled:** nadcházející události z kalendáře jnCalendar seřazené podle data a seskupené po měsících.
   Dny, kdy nic není, se vynechají. Filtr podle typu (nebo jen *Lidé*: narozeniny, svátky, výročí)
   a rozsah měsíc / 3 měsíce / rok. Nahoře je vidět, kdo má dnes a zítra svátek.
-- **Narozeniny a výročí:** opakují se každý rok a přehled ukazuje, kolikáté jsou („40. narozeniny“,
-  „10. výročí“). Když rok neznáte, zaškrtněte *rok neznám*.
-- **Svátky:** stačí napsat jméno, datum se doplní samo podle českého kalendáře jmen.
-- **Doklady a STK:** konec platnosti pasu, občanky, řidičáku, průkazu vůdce plavidla nebo technické
-  kontroly. STK se ve výchozím stavu opakuje každé 2 roky; po kontrole stačí upravit datum.
-  Připomínka chodí 28 dní předem (víc Google nedovolí), v přehledu ale termín vidíte i dřív.
-- **Lékařské prohlídky:** rychlá volba běžných preventivních prohlídek s obvyklými intervaly
-  (praktický lékař každé 2 roky, zubař 2× ročně, gynekolog každý rok, mamografie každé 2 roky
-  od 45 let). Po návštěvě stačí upravit datum na nový termín.
-- **✓ Hotovo** (STK, lékařské prohlídky, údržba): v detailu položky zadáte, kdy jste ji provedli,
-  a termín se posune o nastavený interval (např. STK provedená 9. 11. 2026 → platí do 9. 11. 2028).
-  Aplikace si pamatuje, kdy to bylo naposledy.
-- **Položky:** správa všeho, co je v kalendáři, se souhrnem prošlých záruk a měsíční ceny předplatných.
+- **17 typů položek ve skupinách:**
+  - *Lidé* – narozeniny (věk), svátky (datum podle jména), výročí
+  - *Termíny a platnost* – doklady, STK, pojištění a smlouvy, daně a poplatky
+  - *Zdraví* – prohlídky, očkování, čočky; zvířata
+  - *Údržba* – auto, loď, domácnost, zahrada, ostatní údržba
+  - *Platby a ostatní* – předplatné, záruky, jiné
+- **Rychlá volba:** u většiny typů rozbalovací seznam běžných úkonů s obvyklými intervaly
+  (např. zubař 2× ročně, výměna impeleru, kontrola komína, přezutí pneu, daň z nemovitých věcí do 31. 5.).
+- **Smlouvy a pojištění:** zadáte výročí a výpovědní lhůtu (u pojištění 6 týdnů) a do kalendáře
+  se zapíše poslední den pro výpověď.
+- **✓ Hotovo** u opakovaných úkonů (STK, zdraví, zvířata, auto, loď, domácnost, zahrada, údržba):
+  termín se posune o interval od data provedení a aplikace si pamatuje, kdy to bylo naposledy.
+- **Položky:** správa všeho, co je v kalendáři, se souhrnem prošlých položek a měsíční ceny předplatných.
+- **Export a import** položek do souboru – přenos k jinému uživateli nebo záloha.
 
 ## Spuštění
 
@@ -126,6 +128,7 @@ styles.css      vzhled (světlý i tmavý režim)
 js/app.js       průvodce, přehled, formulář
 js/auth.js      přihlášení přes Google
 js/calendar.js  volání Calendar API, převod položka ↔ událost
+js/catalog.js   typy položek, výchozí hodnoty, rychlá volba
 js/dates.js     práce s daty, opakování, připomínky
 js/svatky.js    český kalendář jmen (data z balíčku namedays, MIT licence)
 help.html       nápověda; náhledy obrazovek v help/img/

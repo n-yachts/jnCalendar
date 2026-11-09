@@ -213,8 +213,9 @@ dialog form, .dlg-pad { padding: 1.5rem; }
 .item.t-doklad { border-left-color: #d50000; }
 .item.t-stk { border-left-color: #039be5; }
 .item.t-prohlidka { border-left-color: #f6bf26; }
-.presets { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; margin: -.4rem 0 1rem; }
-.presets .hint { margin-right: .2rem; }
+.presets { background: var(--bg); border-radius: 10px; padding: .7rem .9rem .1rem; margin: 0 0 1rem; }
+.presets label { margin-bottom: .4rem; }
+.presets #preset-hint { margin: 0 0 .6rem; min-height: 1em; }
 .chip.small { font-size: .82rem; padding: .25rem .65rem; }
 .done-box { background: var(--soon-bg); border-radius: 10px; padding: .8rem 1rem .2rem; margin: -.2rem 0 1rem; }
 .done-row { display: flex; gap: .75rem; align-items: end; }
@@ -236,3 +237,20 @@ a.btn:hover { border-color: var(--muted); }
 .help-card:hover { border-color: var(--accent); }
 .help-card .hc-icon { font-size: 1.6rem; }
 .help-card .muted { font-size: .88rem; }
+/* Výběr typu ve skupinách */
+.type-pick { flex-direction: column; gap: .45rem; }
+.tp-group { display: grid; grid-template-columns: 8.5rem 1fr; gap: .5rem; align-items: start; }
+.tp-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding-top: .45rem; line-height: 1.3; }
+.tp-chips { display: flex; flex-wrap: wrap; gap: .3rem; }
+@media (max-width: 560px) { .tp-group { grid-template-columns: 1fr; gap: .2rem; } .tp-label { padding-top: 0; } }
+.preset-group { width: 100%; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-top: .35rem; }
+.notice-wrap { align-items: end; }
+.notice-wrap > label { max-width: 200px; }
+.notice-info { flex: 2; margin: 0 0 .9rem; }
+.item.t-smlouva { border-left-color: #7986cb; }
+.item.t-dane { border-left-color: #795548; }
+.item.t-zvire { border-left-color: #8bc34a; }
+.item.t-auto { border-left-color: #0288d1; }
+.item.t-lod { border-left-color: #1a237e; }
+.item.t-dum { border-left-color: #ff8f00; }
+.item.t-zahrada { border-left-color: #2e7d32; }

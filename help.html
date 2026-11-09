@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nápověda – jnCalendar</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
-  <link rel="stylesheet" href="styles.css?v=20261109-1510">
+  <link rel="stylesheet" href="styles.css?v=20261109-1745">
   <style>
     .help { display: grid; grid-template-columns: 220px 1fr; gap: 2.5rem; max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 5rem; }
     .toc { position: sticky; top: 1rem; align-self: start; max-height: calc(100vh - 2rem); overflow: auto; font-size: .9rem; }
@@ -71,10 +71,13 @@
         <li><a href="#pridani">Přidání položky</a></li>
         <li><a href="#typy">Typy položek</a>
           <ol>
+            <li><a href="#rychla-volba">Rychlá volba</a></li>
             <li><a href="#lide">Narozeniny, svátky, výročí</a></li>
-            <li><a href="#doklady">Doklady a STK</a></li>
-            <li><a href="#prohlidky">Lékařské prohlídky</a></li>
-            <li><a href="#ostatni">Záruky, předplatné, údržba</a></li>
+            <li><a href="#doklady">Doklady, STK, daně</a></li>
+            <li><a href="#smlouvy">Pojištění a smlouvy</a></li>
+            <li><a href="#zdravi">Zdraví a zvířata</a></li>
+            <li><a href="#udrzba">Auto, loď, dům, zahrada</a></li>
+            <li><a href="#ostatni">Předplatné a záruky</a></li>
           </ol>
         </li>
         <li><a href="#hotovo">Tlačítko Hotovo</a></li>
@@ -93,16 +96,17 @@
       <!-- ================================================================ -->
       <section id="uvod">
         <h1>Nápověda</h1>
-        <p class="lead">jnCalendar hlídá důležitá data – narozeniny, svátky, výročí, platnost dokladů,
-          technické kontroly, lékařské prohlídky, záruky, předplatná a údržbu – a ukládá je do
-          vašeho Google kalendáře i s připomínkami.</p>
+        <p class="lead">jnCalendar hlídá důležitá data – narozeniny, svátky a výročí, platnost dokladů,
+          STK, daně, výpovědní lhůty pojistek, prohlídky a očkování, péči o zvířata, údržbu auta,
+          lodi, domu i zahrady, předplatná a záruky – a ukládá je do vašeho Google kalendáře
+          i s připomínkami.</p>
         <p>Aplikace nemá vlastní server ani databázi. Všechno se ukládá do samostatného kalendáře
           <b>jnCalendar</b> ve vašem Google účtu. Připomínky vám proto chodí z Google kalendáře do
           telefonu i počítače, i když aplikaci zrovna nemáte otevřenou.</p>
         <p>Aplikaci najdete na webu <a href="https://n-yachts.github.io/jnCalendar/">n-yachts.github.io/jnCalendar</a>.
           Na počítači ji jde spustit i lokálně přes <code>start.cmd</code> (běží pak na <code>http://localhost:8080</code>).</p>
         <figure>
-          <img src="help/img/prehled.png?v=20261109-1510" alt="Přehled nadcházejících událostí" loading="lazy" width="1000" height="1000">
+          <img src="help/img/prehled.png?v=20261109-1745" alt="Přehled nadcházejících událostí" loading="lazy" width="1000" height="1000">
           <figcaption>Přehled: všechno nadcházející seřazené podle data.</figcaption>
         </figure>
       </section>
@@ -114,7 +118,7 @@
           v Google Cloud: aplikace tak dostane vlastní „klíč“ (<b>Client ID</b>), přes který se pak
           přihlašujete. Trvá to asi 10 minut, je to zdarma a nepotřebujete platební kartu.</p>
         <figure>
-          <img src="help/img/pruvodce-uvod.png?v=20261109-1510" alt="Úvodní obrazovka průvodce" loading="lazy" width="1000" height="760">
+          <img src="help/img/pruvodce-uvod.png?v=20261109-1745" alt="Úvodní obrazovka průvodce" loading="lazy" width="1000" height="760">
           <figcaption>Úvod průvodce. Nahoře vidíte, ve kterém kroku jste.</figcaption>
         </figure>
         <div class="tip"><b>Už máte Client ID?</b>
@@ -132,7 +136,7 @@
           <li>Počkejte, až se projekt vytvoří, a nahoře v liště ho vyberte.</li>
         </ol>
         <figure>
-          <img src="help/img/pruvodce-projekt.png?v=20261109-1510" alt="Krok průvodce: projekt" loading="lazy" width="1000" height="760">
+          <img src="help/img/pruvodce-projekt.png?v=20261109-1745" alt="Krok průvodce: projekt" loading="lazy" width="1000" height="760">
           <figcaption>Průvodce u každého kroku ukazuje přesný postup a odkaz.</figcaption>
         </figure>
 
@@ -173,7 +177,7 @@
           <li>Zkopírujte <b>Client ID</b> (končí na <code>.apps.googleusercontent.com</code>) a vložte ho do průvodce.</li>
         </ol>
         <figure>
-          <img src="help/img/pruvodce-client-id.png?v=20261109-1510" alt="Krok průvodce: Client ID" loading="lazy">
+          <img src="help/img/pruvodce-client-id.png?v=20261109-1745" alt="Krok průvodce: Client ID" loading="lazy">
           <figcaption>Adresu aktuální stránky si zkopírujete tlačítkem <i>Kopírovat</i>. Client ID vložíte do pole dole.</figcaption>
         </figure>
         <div class="tip"><b>Je Client ID tajné?</b>
@@ -191,10 +195,10 @@
         </ol>
         <p>Aplikace pak sama založí kalendář <b>jnCalendar</b> a můžete začít přidávat položky.</p>
         <figure class="half">
-          <img src="help/img/pruvodce-hotovo.png?v=20261109-1510" alt="Poslední krok průvodce" loading="lazy">
+          <img src="help/img/pruvodce-hotovo.png?v=20261109-1745" alt="Poslední krok průvodce" loading="lazy">
           <figcaption>Poslední krok průvodce.</figcaption>
         </figure><figure class="half">
-          <img src="help/img/prihlaseni.png?v=20261109-1510" alt="Obrazovka přihlášení" loading="lazy">
+          <img src="help/img/prihlaseni.png?v=20261109-1745" alt="Obrazovka přihlášení" loading="lazy">
           <figcaption>Přihlášení po vypršení (asi po hodině nebo při novém otevření).</figcaption>
         </figure>
         <p>Přihlášení platí přibližně hodinu. Pak aplikace požádá o nové přihlášení – stačí kliknout,
@@ -218,7 +222,7 @@
           <li><b>Kliknutím</b> na událost ji otevřete k úpravě.</li>
         </ul>
         <figure>
-          <img src="help/img/prehled-lide.png?v=20261109-1510" alt="Přehled s filtrem Lidé" loading="lazy">
+          <img src="help/img/prehled-lide.png?v=20261109-1745" alt="Přehled s filtrem Lidé" loading="lazy">
           <figcaption>Filtr <i>👥 Lidé</i>: jen narozeniny, svátky a výročí.</figcaption>
         </figure>
         <p>Tlačítko <b>⟳ Obnovit</b> načte data znovu z Google kalendáře – hodí se, když jste
@@ -230,8 +234,11 @@
         <h2>Přidání položky</h2>
         <p>Klikněte na <b>+ Přidat</b>. Ve formuláři:</p>
         <ol class="steps-list">
-          <li><b>Vyberte typ</b> nahoře (Záruka, Doklady, STK, Prohlídky…). Podle typu se předvyplní
-            opakování a počet dní pro připomínku a změní se popisky polí.</li>
+          <li><b>Vyberte typ</b> nahoře – typy jsou rozdělené do skupin (Lidé, Termíny a platnost, Zdraví,
+            Údržba, Platby a ostatní). Podle typu se předvyplní opakování a počet dní pro připomínku
+            a změní se popisky polí.</li>
+          <li><b>Rychlá volba</b> (u většiny typů) – vyberte ze seznamu a formulář se vyplní sám,
+            viz <a href="#rychla-volba">rychlá volba</a>.</li>
           <li><b>Název</b> – co to je, třeba „Jana Nováková“, „Cestovní pas – Jan“ nebo „Netflix“.</li>
           <li><b>Datum</b> – podle typu: datum narození, konec platnosti, termín další prohlídky…</li>
           <li><b>Opakování</b> – jednorázově, každý měsíc nebo každý rok; pole <i>Každých</i> nastaví
@@ -243,7 +250,7 @@
         </ol>
         <p>Po kliknutí na <b>Uložit</b> se položka hned objeví v Google kalendáři.</p>
         <figure>
-          <img src="help/img/formular-narozeniny.png?v=20261109-1510" alt="Formulář nové položky – narozeniny" loading="lazy">
+          <img src="help/img/formular-narozeniny.png?v=20261109-1745" alt="Formulář nové položky – narozeniny" loading="lazy">
           <figcaption>Nová položka typu Narozeniny.</figcaption>
         </figure>
       </section>
@@ -251,22 +258,45 @@
       <!-- ================================================================ -->
       <section id="typy">
         <h2>Typy položek</h2>
+        <p>Typy jsou ve formuláři rozdělené do skupin. Každý typ má vlastní barvu v Google kalendáři,
+          předvyplněné opakování a připomínku a u většiny i <b>rychlou volbu</b> (viz níže).</p>
         <table>
-          <thead><tr><th>Typ</th><th>K čemu</th><th>Výchozí opakování</th><th>Připomínka</th></tr></thead>
+          <thead><tr><th>Skupina</th><th>Typ</th><th>K čemu</th><th>Výchozí opakování</th><th>Připomínka</th></tr></thead>
           <tbody>
-            <tr><td>🎂 Narozeniny</td><td>datum narození; ukazuje věk</td><td>každý rok</td><td>7 dní</td></tr>
+            <tr><td rowspan="3">Lidé</td><td>🎂 Narozeniny</td><td>datum narození; ukazuje věk</td><td>každý rok</td><td>7 dní</td></tr>
             <tr><td>💐 Svátek</td><td>jmeniny; datum se doplní podle jména</td><td>každý rok</td><td>1 den</td></tr>
             <tr><td>💍 Výročí</td><td>svatba, seznámení…; ukazuje kolikáté</td><td>každý rok</td><td>7 dní</td></tr>
-            <tr><td>🪪 Doklady</td><td>konec platnosti pasu, občanky, řidičáku…</td><td>neopakuje se</td><td>28 dní</td></tr>
+            <tr><td rowspan="4">Termíny a platnost</td><td>🪪 Doklady</td><td>konec platnosti pasu, občanky, řidičáku, karty…</td><td>neopakuje se</td><td>28 dní</td></tr>
             <tr><td>🚗 STK</td><td>platnost technické kontroly</td><td>každé 2 roky</td><td>28 dní</td></tr>
-            <tr><td>🩺 Prohlídky</td><td>preventivní lékařské prohlídky</td><td>podle rychlé volby</td><td>14 dní</td></tr>
+            <tr><td>📄 Smlouvy</td><td>pojištění a smlouvy – hlídá <b>poslední den pro výpověď</b></td><td>každý rok</td><td>14 dní</td></tr>
+            <tr><td>🏛️ Daně</td><td>daňové přiznání, daň z nemovitých věcí, poplatky</td><td>každý rok</td><td>14 dní</td></tr>
+            <tr><td rowspan="2">Zdraví</td><td>🩺 Zdraví</td><td>preventivní prohlídky, očkování, čočky</td><td>podle rychlé volby</td><td>14 dní</td></tr>
+            <tr><td>🐾 Zvířata</td><td>očkování, odčervení, veterinář</td><td>každý rok</td><td>7 dní</td></tr>
+            <tr><td rowspan="5">Údržba</td><td>🚙 Auto</td><td>přezutí pneu, servis, olej, dálniční známka</td><td>každý rok</td><td>14 dní</td></tr>
+            <tr><td>⛵ Loď</td><td>sezóna, servis motoru, bezpečnostní výbava</td><td>každý rok</td><td>14 dní</td></tr>
+            <tr><td>🏠 Domácnost</td><td>kotel, komín, revize, hasicí přístroj, filtry</td><td>každý rok</td><td>14 dní</td></tr>
+            <tr><td>🌳 Zahrada</td><td>bazén, trávník, živý plot, zazimování vody</td><td>každý rok</td><td>7 dní</td></tr>
+            <tr><td>🔧 Údržba</td><td>ostatní pravidelné úkony (kolo, motorka…)</td><td>každý rok</td><td>14 dní</td></tr>
+            <tr><td rowspan="3">Platby a ostatní</td><td>🔁 Předplatné</td><td>datum další platby; měsíční souhrn</td><td>každý měsíc</td><td>3 dny</td></tr>
             <tr><td>🛡️ Záruka</td><td>konec záruky na věc</td><td>neopakuje se</td><td>28 dní</td></tr>
-            <tr><td>🔁 Předplatné</td><td>datum další platby</td><td>každý měsíc</td><td>3 dny</td></tr>
-            <tr><td>🔧 Údržba</td><td>servis, výměna oleje, revize</td><td>každý rok</td><td>14 dní</td></tr>
             <tr><td>📌 Jiné</td><td>cokoli dalšího</td><td>neopakuje se</td><td>7 dní</td></tr>
           </tbody>
         </table>
         <p>Výchozí hodnoty jsou jen návrh, všechno jde u každé položky změnit.</p>
+
+        <h3 id="rychla-volba">Rychlá volba</h3>
+        <p>U nové položky většiny typů je nahoře rozbalovací seznam <b>Rychlá volba</b>. Vyberete například
+          „Výměna impeleru“ a formulář se vyplní: název, opakování, připomínka a u sezónních úkonů
+          i navržené datum. Pod seznamem se ukáže krátká poznámka (např. <i>obvykle každou sezónu</i>).
+          Do názvu pak můžete doplnit podrobnost, třeba „Zubař – Jan“ nebo „Přezutí – Octavia“.</p>
+        <figure>
+          <img src="help/img/formular-lod.png?v=20261109-1745" alt="Formulář s rychlou volbou pro loď" loading="lazy">
+          <figcaption>Rychlá volba u typu Loď. Typy jsou ve formuláři seřazené do skupin.</figcaption>
+        </figure>
+        <div class="tip"><b>Intervaly jsou orientační</b>
+          Vycházejí z běžných doporučení a předpisů (např. preventivní prohlídky hrazené pojišťovnou,
+          čištění komínů podle vyhl. 34/2016 Sb.). Vždy je upravte podle svého lékaře, servisu,
+          smlouvy, výrobce nebo vyhlášky obce.</div>
 
         <h3 id="lide">Narozeniny, svátky a výročí</h3>
         <ul>
@@ -277,52 +307,122 @@
             <b>datum doplní samo</b> a pod polem uvidíte, kdy má svátek. Datum můžete i ručně přepsat.</li>
         </ul>
         <figure>
-          <img src="help/img/formular-svatek.png?v=20261109-1510" alt="Formulář svátku s automaticky doplněným datem" loading="lazy">
+          <img src="help/img/formular-svatek.png?v=20261109-1745" alt="Formulář svátku s automaticky doplněným datem" loading="lazy">
           <figcaption>U svátku se datum doplní podle jména („Eva má svátek 24. 12.“).</figcaption>
         </figure>
         <div class="tip"><b>Tip</b> Do poznámky si u lidí můžete psát, co mají rádi nebo nápady na dárky.</div>
 
-        <h3 id="doklady">Doklady a STK</h3>
+        <h3 id="doklady">Doklady, STK a daně</h3>
         <ul>
-          <li><b>Doklady</b> – jako datum zadejte konec platnosti. Připomínka přijde 28 dní předem
-            (víc Google nedovolí); v přehledu s rozsahem <i>Rok</i> ale termín uvidíte mnohem dřív –
-            to se hodí u pasu, na který se čeká.</li>
-          <li><b>STK</b> – jako datum zadejte, do kdy STK platí. Výchozí opakování je každé 2 roky
-            (u nového auta změňte na 4 roky). Po kontrole použijte <a href="#hotovo">tlačítko Hotovo</a>.</li>
+          <li><b>Doklady</b> – jako datum zadejte konec platnosti. Rychlá volba: občanský průkaz,
+            cestovní pas, řidičský průkaz, průkaz vůdce plavidla, licence k radiostanici, platební karta.
+            Připomínka přijde 28 dní předem (víc Google nedovolí); v přehledu s rozsahem <i>Rok</i>
+            ale termín uvidíte mnohem dřív – to se hodí u pasu, na který se čeká.</li>
+          <li><b>STK</b> – jako datum zadejte, do kdy STK platí. Rychlá volba: osobní auto (každé 2 roky),
+            nové auto (první STK po 4 letech). Po kontrole použijte <a href="#hotovo">tlačítko Hotovo</a>.</li>
+          <li><b>Daně a poplatky</b> – rychlá volba doplní i obvyklé datum:
+            <table>
+              <thead><tr><th>Položka</th><th>Termín</th></tr></thead>
+              <tbody>
+                <tr><td>Daňové přiznání</td><td>papírově do 1. 4., elektronicky zhruba do 1. 5.</td></tr>
+                <tr><td>Daň z nemovitých věcí – platba</td><td>do 31. 5.</td></tr>
+                <tr><td>Daň z nemovitých věcí – 2. splátka</td><td>do 30. 11. (jen daň nad 5 000 Kč)</td></tr>
+                <tr><td>Přiznání k dani z nemovitostí</td><td>do 31. 1., jen po koupi nebo změně</td></tr>
+                <tr><td>Poplatek za psa, za odpad</td><td>podle vyhlášky vaší obce – datum zadejte sami</td></tr>
+              </tbody>
+            </table>
+            Když termín vyjde na víkend nebo svátek, posouvá se na nejbližší pracovní den.</li>
         </ul>
 
-        <h3 id="prohlidky">Lékařské prohlídky</h3>
-        <p>U typu <b>🩺 Prohlídky</b> je <b>rychlá volba</b>, která vyplní název a obvyklý interval
-          preventivních prohlídek hrazených pojišťovnou:</p>
+        <h3 id="smlouvy">Pojištění a smlouvy</h3>
+        <p>Pojistku obvykle nejde vypovědět kdykoli, ale jen <b>k výročí</b> – a výpověď musí pojišťovna
+          dostat nejpozději <b>6 týdnů předem</b>. Proto typ <b>📄 Smlouvy</b> nehlídá výročí, ale
+          <b>poslední den pro výpověď</b>:</p>
+        <ol class="steps-list">
+          <li>Jako datum zadejte <b>výročí smlouvy</b> (konec pojistného období – najdete ho ve smlouvě, u auta i na zelené kartě).</li>
+          <li>Zkontrolujte <b>výpovědní lhůtu</b> v týdnech (u pojištění předvyplněno 6).</li>
+          <li>Pod polem uvidíte, jaký den se zapíše do kalendáře – <i>poslední den pro výpověď</i>.
+            Připomínka přijde ještě o zvolený počet dní dřív.</li>
+        </ol>
+        <p>Rychlá volba: povinné ručení, havarijní pojištění, pojištění domácnosti, nemovitosti, plavidla,
+          roční cestovní pojištění; dále konec fixace hypotéky (připomene se 3 měsíce předem),
+          konec fixace energií, konec závazku u mobilu či internetu a konec leasingu nebo úvěru.
+          Když nastavíte lhůtu 0, zapíše se přímo datum výročí nebo konce smlouvy.</p>
+        <figure>
+          <img src="help/img/formular-smlouva.png?v=20261109-1745" alt="Formulář smlouvy s výpovědní lhůtou" loading="lazy">
+          <figcaption>Povinné ručení s výročím 1. 3.: do kalendáře se zapíše poslední den pro výpověď.</figcaption>
+        </figure>
+
+        <h3 id="zdravi">Zdraví a zvířata</h3>
+        <p>Typ <b>🩺 Zdraví</b> má v rychlé volbě tři skupiny:</p>
         <table>
-          <thead><tr><th>Prohlídka</th><th>Interval</th></tr></thead>
+          <thead><tr><th>Rychlá volba</th><th>Interval</th></tr></thead>
           <tbody>
+            <tr><th colspan="2">Preventivní prohlídky</th></tr>
             <tr><td>Praktický lékař</td><td>každé 2 roky</td></tr>
             <tr><td>Zubař</td><td>2× ročně (každých 6 měsíců)</td></tr>
+            <tr><td>Dentální hygiena</td><td>doporučeno 1–2× ročně</td></tr>
             <tr><td>Gynekolog</td><td>každý rok</td></tr>
             <tr><td>Mamografie</td><td>každé 2 roky (ženy od 45 let)</td></tr>
             <tr><td>Pracovnělékařská prohlídka</td><td>2 roky – upravte podle posudku</td></tr>
+            <tr><td>Oční kontrola, kožní (znaménka)</td><td>doporučeno každé 2 roky / každý rok</td></tr>
+            <tr><th colspan="2">Očkování</th></tr>
+            <tr><td>Tetanus</td><td>do 60 let po 10–15 letech, pak po 10 letech (předvyplněno 15)</td></tr>
+            <tr><td>Klíšťová encefalitida</td><td>1. přeočkování po 3 letech, pak po 5, od 60 let po 3 (předvyplněno 5)</td></tr>
+            <tr><td>Chřipka</td><td>každý podzim</td></tr>
+            <tr><td>Cestovní očkování</td><td>podle vakcíny</td></tr>
+            <tr><th colspan="2">Ostatní</th></tr>
+            <tr><td>Kontaktní čočky – výměna</td><td>podle typu čoček (předvyplněno měsíčně)</td></tr>
           </tbody>
         </table>
         <figure>
-          <img src="help/img/formular-prohlidky.png?v=20261109-1510" alt="Formulář prohlídky s rychlou volbou" loading="lazy">
+          <img src="help/img/formular-prohlidky.png?v=20261109-1745" alt="Formulář s rychlou volbou prohlídky" loading="lazy">
           <figcaption>Rychlá volba vyplní název a interval. Do názvu můžete doplnit jméno, třeba „Zubař – Jan“.</figcaption>
         </figure>
+        <p>U očkování se interval liší podle věku a vakcíny – nastavte ho podle doporučení lékaře.
+          V přehledu je u položky vidět druh (<i>preventivní prohlídka</i>, <i>očkování</i>).</p>
+        <p>Typ <b>🐾 Zvířata</b>: očkování proti vzteklině, kombinované očkování, odčervení,
+          ochrana proti klíšťatům a veterinární prohlídka. Do názvu doplňte jméno zvířete
+          („Očkování – Rex“). Intervaly upravte podle veterináře a přípravku.</p>
 
-        <h3 id="ostatni">Záruky, předplatné, údržba</h3>
+        <h3 id="udrzba">Auto, loď, domácnost a zahrada</h3>
+        <table>
+          <thead><tr><th>Typ</th><th>Rychlá volba</th></tr></thead>
+          <tbody>
+            <tr><td>🚙 Auto</td><td>přezutí na zimní pneu (navrhne 15. 10.; zimní pneu jsou povinné 1. 11.–31. 3. za zimních podmínek),
+              přezutí na letní, servisní prohlídka, výměna oleje, dálniční známka (platí 365 dní od zvoleného dne),
+              autolékárnička, zimní náplň do ostřikovačů</td></tr>
+            <tr><td>⛵ Loď</td><td><i>Sezóna:</i> odzimování, spuštění na vodu, vytažení, zazimování;
+              <i>Údržba:</i> antifouling, servis motoru, výměna impeleru a anod;
+              <i>Bezpečnost:</i> servis záchranných vest, expirace pyrotechniky, hasicí přístroj, revize plynu,
+              technická prohlídka plavidla</td></tr>
+            <tr><td>🏠 Domácnost</td><td>servis plynového kotle, kontrola a čištění komína (obvykle 1× ročně),
+              revize elektroinstalace a hromosvodu, hasicí přístroj, detektory kouře a CO, domácí lékárnička,
+              filtry rekuperace a digestoře, odečet vodoměru a plynoměru, vývoz septiku</td></tr>
+            <tr><td>🌳 Zahrada</td><td>servis sekačky, hnojení trávníku, napuštění a zazimování bazénu,
+              stříhání živého plotu, zazimování zahradní vody</td></tr>
+            <tr><td>🔧 Údržba</td><td>servis kola, servis motocyklu – a cokoli dalšího</td></tr>
+          </tbody>
+        </table>
+        <p>Pojištění auta, lodi nebo domu patří do <a href="#smlouvy">Smluv</a> (kvůli výpovědní lhůtě),
+          průkaz vůdce plavidla a licence k radiostanici do <a href="#doklady">Dokladů</a>
+          a stání v marině do Předplatného. U všech úkonů v této skupině funguje
+          <a href="#hotovo">tlačítko Hotovo</a>.</p>
+
+        <h3 id="ostatni">Předplatné a záruky</h3>
         <ul>
-          <li><b>Záruka</b> – datum konce záruky; do poznámky si napište, kde je účtenka.</li>
-          <li><b>Předplatné</b> – datum další platby, opakování a cena. V záložce Položky se z cen
+          <li><b>Předplatné</b> – datum další platby, opakování a cena. Rychlá volba: streamovací služba,
+            software, doména, stání v marině, členský příspěvek. V záložce Položky se z cen
             počítá, kolik předplatná stojí měsíčně.</li>
-          <li><b>Údržba</b> – pravidelné úkony (výměna oleje, servis, revize). Po provedení použijte
-            <a href="#hotovo">tlačítko Hotovo</a>.</li>
+          <li><b>Záruka</b> – datum konce záruky; do poznámky si napište, kde je účtenka.</li>
         </ul>
       </section>
 
       <!-- ================================================================ -->
       <section id="hotovo">
         <h2>Tlačítko Hotovo</h2>
-        <p>U <b>STK, lékařských prohlídek a údržby</b> nemusíte po každé návštěvě přepisovat datum ručně:</p>
+        <p>U opakovaných úkonů – <b>STK, zdraví, zvířata, auto, loď, domácnost, zahrada a údržba</b> –
+          nemusíte po každé návštěvě či práci přepisovat datum ručně:</p>
         <ol class="steps-list">
           <li>Otevřete položku (kliknutím v přehledu nebo v seznamu).</li>
           <li>Nahoře je zelený rámeček <b>Provedeno dne</b> s dnešním datem. Pokud jste úkon udělali
@@ -333,10 +433,10 @@
         <p>Nový termín = <b>datum provedení + interval opakování</b>. Aplikace si zapamatuje, kdy jste
           úkon provedli naposledy, a ukazuje to v seznamu („naposledy 15. 12. 2024“).</p>
         <figure>
-          <img src="help/img/hotovo.png?v=20261109-1510" alt="Úprava STK s tlačítkem Hotovo" loading="lazy">
+          <img src="help/img/hotovo.png?v=20261109-1745" alt="Úprava STK s tlačítkem Hotovo" loading="lazy">
           <figcaption>Rámeček Hotovo u technické kontroly.</figcaption>
         </figure>
-        <div class="tip"><b>Rámeček nevidíte?</b> Objeví se jen u STK, prohlídek a údržby, které se opakují.
+        <div class="tip"><b>Rámeček nevidíte?</b> Objeví se jen u uvedených typů, a to když se položka opakuje.
           U jednorázové položky nejdřív nastavte opakování a uložte.</div>
       </section>
 
@@ -355,7 +455,7 @@
           ukazuje naléhavost: <span style="color:var(--warn)">do týdne</span>,
           <span style="color:var(--soon)">do měsíce</span>, <span style="color:var(--bad)">prošlé</span>.</p>
         <figure>
-          <img src="help/img/polozky.png?v=20261109-1510" alt="Seznam položek se souhrnem" loading="lazy">
+          <img src="help/img/polozky.png?v=20261109-1745" alt="Seznam položek se souhrnem" loading="lazy">
           <figcaption>Seznam položek seřazený podle nejbližšího termínu.</figcaption>
         </figure>
       </section>
@@ -394,10 +494,10 @@
           <li><b>⬆ Importovat ze souboru</b> položky ze souboru přidá do kalendáře účtu, který je právě přihlášený.</li>
         </ul>
         <figure class="half">
-          <img src="help/img/nastaveni.png?v=20261109-1510" alt="Nastavení s exportem a importem" loading="lazy">
+          <img src="help/img/nastaveni.png?v=20261109-1745" alt="Nastavení s exportem a importem" loading="lazy">
           <figcaption>Nastavení: přenos položek, účet a verze aplikace.</figcaption>
         </figure><figure class="half">
-          <img src="help/img/import.png?v=20261109-1510" alt="Náhled importu" loading="lazy">
+          <img src="help/img/import.png?v=20261109-1745" alt="Náhled importu" loading="lazy">
           <figcaption>Před importem uvidíte, co se přidá.</figcaption>
         </figure>
         <h3>Přenos k jinému uživateli</h3>
@@ -428,10 +528,10 @@
         <p>Client ID je potřeba v prohlížeči telefonu zadat jednou (průvodce → <i>Už mám Client ID</i>).
           Aplikace se přizpůsobí i tmavému režimu telefonu.</p>
         <figure class="phone half">
-          <img src="help/img/mobil.png?v=20261109-1510" alt="Aplikace na mobilu" loading="lazy">
+          <img src="help/img/mobil.png?v=20261109-1745" alt="Aplikace na mobilu" loading="lazy">
           <figcaption>Přehled na telefonu.</figcaption>
         </figure><figure class="half">
-          <img src="help/img/tmavy-rezim.png?v=20261109-1510" alt="Tmavý režim" loading="lazy">
+          <img src="help/img/tmavy-rezim.png?v=20261109-1745" alt="Tmavý režim" loading="lazy">
           <figcaption>Tmavý režim se zapne podle nastavení systému.</figcaption>
         </figure>
       </section>
@@ -444,7 +544,8 @@
             skrýt, přebarvit nebo nasdílet (např. rodině) jako kterýkoli jiný kalendář.</li>
           <li>Události jsou celodenní a nepočítají se jako „zaneprázdněn“.</li>
           <li>Každý typ má vlastní barvu a název začíná typem: <i>Narozeniny: Jana Nováková</i>,
-            <i>Technická kontrola: Škoda Octavia</i>…</li>
+            <i>Technická kontrola: Škoda Octavia</i>, <i>Očkování: Tetanus</i>. U smluv s výpovědní lhůtou
+            se událost jmenuje <i>Poslední den výpovědi: Povinné ručení (výročí 1. 3.)</i>.</li>
           <li>Do kalendáře se dostanete i z aplikace: <i>Nastavení → Otevřít Google kalendář</i>.</li>
         </ul>
         <p>Aplikace pracuje <b>jen s kalendářem jnCalendar</b>. Vaše ostatní kalendáře nevidí a nic v nich nemění.</p>

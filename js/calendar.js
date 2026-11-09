@@ -1,6 +1,7 @@
 // Tenká vrstva nad Google Calendar REST API (v3) a převod položek na události.
-import { getStoredToken, clearToken } from './auth.js?v=20261109-1510';
-import { addDays, toRRule, fromRRule, remindDaysToMinutes, minutesToRemindDays } from './dates.js?v=20261109-1510';
+import { TYPES } from './catalog.js?v=20261109-1745';
+import { getStoredToken, clearToken } from './auth.js?v=20261109-1745';
+import { addDays, toRRule, fromRRule, remindDaysToMinutes, minutesToRemindDays } from './dates.js?v=20261109-1745';
 
 const API = 'https://www.googleapis.com/calendar/v3';
 export const CALENDAR_NAME = 'jnCalendar';
@@ -48,7 +49,7 @@ export async function ensureCalendar(knownId) {
     method: 'POST',
     body: {
       summary: CALENDAR_NAME,
-      description: 'Narozeniny, svátky, výročí, záruky, doklady, technické kontroly, lékařské prohlídky, předplatná a údržba – spravuje aplikace jnCalendar (https://n-yachts.github.io/jnCalendar/).',
+      description: 'Narozeniny, svátky, termíny, pojistky, zdraví, údržba auta, lodi a domu – spravuje aplikace jnCalendar (https://n-yachts.github.io/jnCalendar/).',
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Prague',
     },
   });
@@ -67,22 +68,29 @@ async function canAccess(id) {
 
 // ---------- Položky ----------
 
-export const TYPES = {
-  zaruka:     { label: 'Záruka',     prefix: 'Konec záruky', color: '9',  icon: '🛡️' },
-  doklad:     { label: 'Doklady',    prefix: 'Konec platnosti', color: '11', icon: '🪪' },
-  stk:        { label: 'Technická kontrola', short: 'STK', prefix: 'Technická kontrola', color: '7', icon: '🚗' },
-  prohlidka:  { label: 'Lékařské prohlídky', short: 'Prohlídky', prefix: 'Preventivní prohlídka', color: '5', icon: '🩺' },
-  predplatne: { label: 'Předplatné', prefix: 'Předplatné',   color: '6',  icon: '🔁' },
-  udrzba:     { label: 'Údržba',     prefix: 'Údržba',       color: '10', icon: '🔧' },
-  narozeniny: { label: 'Narozeniny', prefix: 'Narozeniny',   color: '3',  icon: '🎂', yearly: true },
-  vyroci:     { label: 'Výročí',     prefix: 'Výročí',       color: '4',  icon: '💍', yearly: true },
-  svatek:     { label: 'Svátek',     prefix: 'Svátek',       color: '2',  icon: '💐', yearly: true, noYear: true },
-  jine:       { label: 'Jiné',       prefix: '',             color: '8',  icon: '📌' },
-};
+export { TYPES };
+
+/** Datum, na které se událost v kalendáři skutečně zapisuje.
+ *  U smluv s výpovědní lhůtou je to poslední den pro výpověď (výročí − lhůta). */
+export function eventStartDate(item) {
+  const weeks = Number(item.noticeWeeks) || 0;
+  return weeks ? addDays(item.date, -7 * weeks) : item.date;
+}
+
+function eventSummary(item) {
+  const t = TYPES[item.type] || TYPES.jine;
+  if (item.type === 'smlouva' && Number(item.noticeWeeks) > 0) {
+    const [, m, d] = item.date.split('-').map(Number);
+    return `Poslední den výpovědi: ${item.title} (výročí ${d}. ${m}.)`;
+  }
+  const prefix = item.what ? item.what.charAt(0).toUpperCase() + item.what.slice(1) : t.prefix;
+  return prefix ? `${prefix}: ${item.title}` : item.title;
+}
 
 export function itemToEvent(item) {
   const t = TYPES[item.type] || TYPES.jine;
-  const summary = t.prefix ? `${t.prefix}: ${item.title}` : item.title;
+  const summary = eventSummary(item);
+  const start = eventStartDate(item);
   const lines = [];
   if (item.price) lines.push(`Cena: ${item.price} ${item.currency || 'Kč'}`);
   if (item.note) lines.push(item.note);
@@ -96,8 +104,8 @@ export function itemToEvent(item) {
   return {
     summary,
     description: lines.join('\n'),
-    start: { date: item.date },
-    end: { date: addDays(item.date, 1) },
+    start: { date: start },
+    end: { date: addDays(start, 1) },
     colorId: t.color,
     transparency: 'transparent', // nezobrazovat jako "zaneprázdněn"
     reminders: { useDefault: false, overrides },
@@ -112,6 +120,8 @@ export function itemToEvent(item) {
         jnNote: (item.note || '').slice(0, 900), // limit hodnoty je 1024 znaků
         jnNoYear: item.noYear ? '1' : '',
         jnLastDone: item.lastDone || '',
+        jnWhat: item.what || '',
+        jnNotice: Number(item.noticeWeeks) ? String(Number(item.noticeWeeks)) : '',
       },
     },
   };
@@ -124,7 +134,8 @@ export function eventToItem(ev) {
     id: ev.id,
     type: p.jnType || 'jine',
     title: p.jnTitle || ev.summary || '(bez názvu)',
-    date: ev.start?.date || (ev.start?.dateTime || '').slice(0, 10),
+    // U smluv je v kalendáři poslední den výpovědi; položka nese výročí smlouvy.
+    date: addDays(ev.start?.date || (ev.start?.dateTime || '').slice(0, 10), 7 * (Number(p.jnNotice) || 0)),
     repeat: fromRRule(ev.recurrence),
     remindDays: popup ? minutesToRemindDays(popup.minutes) : 0,
     emailReminder: (ev.reminders?.overrides || []).some(o => o.method === 'email'),
@@ -133,6 +144,8 @@ export function eventToItem(ev) {
     note: p.jnNote || '',
     noYear: p.jnNoYear === '1',
     lastDone: p.jnLastDone || '',
+    what: p.jnWhat || '',
+    noticeWeeks: Number(p.jnNotice) || 0,
     link: ev.htmlLink,
   };
 }
