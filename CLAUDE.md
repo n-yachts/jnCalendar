@@ -25,7 +25,8 @@ Nasazuje se přes GitHub Pages z větve `main`: https://n-yachts.github.io/lhutn
 
 Aplikace se dříve jmenovala **jnCalendar** (repozitář i adresa `/jnCalendar/`). Kvůli kompatibilitě:
 kalendář se najde i pod starým názvem a přejmenuje se (`LEGACY_NAMES` v `js/calendar.js`),
-import přijímá soubory s `app: 'jnCalendar'`, klíče v `localStorage` zůstávají `jn.*`.
+import přijímá soubory s `app: 'jnCalendar'`, klíče v `localStorage` se při startu přenesou z `jn.*` na `lhutnik.*`.
+Klíče `jn*` v `extendedProperties` událostí zůstávají (změna by existující události „ztratila“).
 
 ## Struktura
 

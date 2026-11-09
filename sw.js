@@ -1,7 +1,7 @@
 // Service worker Lhůtník: umožní instalaci aplikace a její spuštění i při slabém signálu.
 // Strategie „nejdřív síť“: vždy se zkusí nová verze z webu, mezipaměť je jen záloha,
 // takže aktualizace se projeví hned. Volání Googlu (přihlášení, kalendář) se nikdy neukládají.
-const VERSION = '20261109-1820';
+const VERSION = '20261109-1830';
 const CACHE = `lhutnik-${VERSION}`;
 const SHELL = [
   './',

@@ -1,16 +1,26 @@
-import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1820';
-import { TYPES, TYPE_GROUPS, DEFAULTS, PRESETS, DONE_TYPES, OCCASION } from './catalog.js?v=20261109-1820';
-import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, eventStartDate, AuthError } from './calendar.js?v=20261109-1820';
-import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1820';
-import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1820';
+import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1830';
+import { TYPES, TYPE_GROUPS, DEFAULTS, PRESETS, DONE_TYPES, OCCASION } from './catalog.js?v=20261109-1830';
+import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, eventStartDate, AuthError } from './calendar.js?v=20261109-1830';
+import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1830';
+import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1830';
 
 // ---------- Stav ----------
-const LS = { client: 'jn.clientId', cal: 'jn.calendarId', step: 'jn.setupStep', range: 'jn.agendaRange', tab: 'jn.tab' };
+// Údaje uložené v prohlížeči (localStorage). Klíče mají předponu „lhutnik.“.
+const LS = { client: 'lhutnik.clientId', cal: 'lhutnik.calendarId', step: 'lhutnik.setupStep', range: 'lhutnik.agendaRange', tab: 'lhutnik.tab' };
 const store = {
   get: k => { try { return localStorage.getItem(k); } catch { return null; } },
   set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
   del: k => { try { localStorage.removeItem(k); } catch {} },
 };
+// Přenos ze starých klíčů „jn.…“ (dřívější název jnCalendar) – Client ID ani kalendář se nezadávají znovu.
+for (const key of Object.values(LS)) {
+  const old = key.replace(/^lhutnik\./, 'jn.');
+  const value = store.get(old);
+  if (value !== null) {
+    if (store.get(key) === null) store.set(key, value);
+    store.del(old);
+  }
+}
 const state = {
   items: [], filter: 'all', search: '', calendarId: store.get(LS.cal), editing: null,
   occ: [], agendaFilter: 'all', range: Number(store.get(LS.range)) || 90, tab: store.get(LS.tab) || 'agenda',

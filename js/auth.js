@@ -10,7 +10,7 @@ export const SCOPES = [
   'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
 ];
 
-const TOKEN_KEY = 'jn.token';
+const TOKEN_KEY = 'lhutnik.token';
 let tokenClient = null;
 let pending = null;
 

@@ -144,7 +144,7 @@ kvůli letnímu/zimnímu času. `nextOccurrence()` napodobuje RRULE: měsíční
    a limit 100 uživatelů.
 
 ### Kalendář (`ensureCalendar`)
-ID kalendáře je v `localStorage` (`jn.calendarId`). Když chybí nebo nefunguje, hledá se
+ID kalendáře je v `localStorage` (`lhutnik.calendarId`). Když chybí nebo nefunguje, hledá se
 v `calendarList` podle názvu (`CALENDAR_NAME` nebo `LEGACY_NAMES`), jinak se založí nový.
 Kalendář se starým názvem (`jnCalendar`) se přejmenuje (`renameIfLegacy`, chyby se ignorují).
 
@@ -238,8 +238,9 @@ Pracovní kopie u uživatele: `C:\Users\jnovacek\source\repos\jnCalendar` (Windo
 ## 10. Historie a nápady
 
 - Dříve **jnCalendar** (adresa `/jnCalendar/`). Kompatibilita: `LEGACY_NAMES`, import
-  `app: 'jnCalendar'`, klíče `jn.*` v `localStorage` a `jn*` v událostech. `LEGACY_NAMES`
-  a import starého formátu lze odstranit, až uživatel potvrdí, že kalendář je přejmenovaný.
+  `app: 'jnCalendar'`, přenos klíčů `jn.*` → `lhutnik.*` v `localStorage` (začátek `app.js`); klíče `jn*`
+  v událostech zůstávají. `LEGACY_NAMES`,
+  přenos klíčů `jn.*` a import starého formátu lze odstranit, až uživatel potvrdí, že kalendář je přejmenovaný.
 - Zvažované a zatím neudělané: zabalení PWA pro Google Play (TWA; vyžaduje vlastní doménu
   kvůli `assetlinks.json`, účet $25 a 14denní test s 12 testery), nativní aplikace (nepřínosné –
   notifikace řeší Google Kalendář), přehled z ostatních kalendářů (uživatel nechce).
