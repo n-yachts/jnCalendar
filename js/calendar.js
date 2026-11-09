@@ -1,7 +1,7 @@
 // Tenká vrstva nad Google Calendar REST API (v3) a převod položek na události.
-import { TYPES } from './catalog.js?v=20261109-1830';
-import { getStoredToken, clearToken } from './auth.js?v=20261109-1830';
-import { addDays, toRRule, fromRRule, remindDaysToMinutes, minutesToRemindDays } from './dates.js?v=20261109-1830';
+import { TYPES } from './catalog.js?v=20261109-2045';
+import { getStoredToken, clearToken } from './auth.js?v=20261109-2045';
+import { addDays, toRRule, fromRRule, remindDaysToMinutes, minutesToRemindDays } from './dates.js?v=20261109-2045';
 
 const API = 'https://www.googleapis.com/calendar/v3';
 export const CALENDAR_NAME = 'Lhůtník';

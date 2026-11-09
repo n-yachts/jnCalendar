@@ -188,6 +188,9 @@ výpověď pojistky 6 týdnů). Při změně je znovu ověř a uveď v nápověd
 
 ## 6. PWA, mezipaměť a verze
 
+> **`id` v `manifest.webmanifest` musí být `/lhutnik/`** (absolutní cesta). Relativní `"./"` se počítá od kořene
+> domény → Lhůtník i Nákupník na `n-yachts.github.io` by měly stejnou identitu a instalace jedné by přepsala druhou.
+
 - `manifest.webmanifest` (název, ikony vč. `maskable`, zkratky *Přidat položku* = `?akce=pridat`
   a *Nápověda*), `icons/` generuje `tools/icons.py`.
 - `sw.js` – **„nejdřív síť“**: vždy nová verze, mezipaměť jen záloha pro offline;

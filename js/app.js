@@ -1,8 +1,8 @@
-import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1830';
-import { TYPES, TYPE_GROUPS, DEFAULTS, PRESETS, DONE_TYPES, OCCASION } from './catalog.js?v=20261109-1830';
-import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, eventStartDate, AuthError } from './calendar.js?v=20261109-1830';
-import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1830';
-import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1830';
+import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-2045';
+import { TYPES, TYPE_GROUPS, DEFAULTS, PRESETS, DONE_TYPES, OCCASION } from './catalog.js?v=20261109-2045';
+import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, eventStartDate, AuthError } from './calendar.js?v=20261109-2045';
+import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-2045';
+import { findNameDay, nameDayOn } from './svatky.js?v=20261109-2045';
 
 // ---------- Stav ----------
 // Údaje uložené v prohlížeči (localStorage). Klíče mají předponu „lhutnik.“.
