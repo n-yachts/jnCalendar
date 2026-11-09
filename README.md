@@ -79,6 +79,21 @@ Do ostatních kalendářů nevidí a nic v nich nemění. Přehled čte jen kale
 - Připomínka přijde v **9:00** zvolený počet dní předem (Google dovoluje nejvýš 28 dní).
 - Opakování: měsíčně nebo ročně, s intervalem (např. každé 2 roky). Událost v kalendáři má odpovídající pravidlo RRULE.
 
+## Přenos položek a záloha
+
+V *Nastavení → Přenos položek*:
+
+- **Exportovat do souboru** uloží všechny položky do souboru `jnCalendar-RRRR-MM-DD.json`.
+- **Importovat ze souboru** je přidá do kalendáře jnCalendar účtu, který je právě přihlášený.
+  Před importem ukáže, co se přidá. Položky se stejným typem a názvem, které už v kalendáři jsou,
+  přeskočí, takže import jde klidně spustit znovu.
+
+Postup pro jiného uživatele: vy uděláte export, soubor mu pošlete, on se v aplikaci přihlásí svým
+účtem a dá import. Export se hodí i jako záloha.
+
+Export z Google kalendáře (.ics) k tomu nepoužívejte: přenese jen holé události bez údajů
+aplikace (typ, rok narození, poslední provedení), takže by je jnCalendar na druhém účtu nepoznal.
+
 ## Další lidé
 
 Aplikace v režimu „In production“ bez ověření zvládne až 100 uživatelů. Každý se přihlásí svým účtem

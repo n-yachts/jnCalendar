@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>jnCalendar</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
-  <link rel="stylesheet" href="styles.css?v=20261109-1440">
+  <link rel="stylesheet" href="styles.css?v=20261109-1450">
 </head>
 <body>
   <header class="topbar">
@@ -146,6 +146,15 @@
         <dt>Kalendář</dt><dd id="set-cal" class="mono"></dd>
         <dt>Verze</dt><dd id="set-ver" class="mono"></dd>
       </dl>
+      <h3 class="sub">Přenos položek</h3>
+      <p class="hint">Export uloží všechny položky do souboru. Import je přidá do kalendáře účtu,
+         který je právě přihlášený. Hodí se pro přenos k jinému uživateli nebo jako záloha.</p>
+      <div class="dlg-actions wrap">
+        <button id="btn-export" class="ghost">⬇ Exportovat do souboru</button>
+        <button id="btn-import" class="ghost">⬆ Importovat ze souboru</button>
+        <input id="import-file" type="file" accept=".json,application/json" hidden>
+      </div>
+      <h3 class="sub">Účet</h3>
       <div class="dlg-actions wrap">
         <button id="btn-open-cal" class="ghost">Otevřít Google kalendář</button>
         <button id="btn-signout" class="ghost">Odhlásit</button>
@@ -156,8 +165,21 @@
     </div>
   </dialog>
 
+  <!-- Import -->
+  <dialog id="dlg-import">
+    <div class="dlg-pad">
+      <h2>Import položek</h2>
+      <div id="import-summary"></div>
+      <div class="dlg-actions">
+        <span class="spacer"></span>
+        <button class="ghost" data-close id="btn-import-cancel">Zrušit</button>
+        <button class="primary" id="btn-import-go">Importovat</button>
+      </div>
+    </div>
+  </dialog>
+
   <div id="toast" class="toast" role="status" popover="manual"></div>
 
-  <script type="module" src="js/app.js?v=20261109-1440"></script>
+  <script type="module" src="js/app.js?v=20261109-1450"></script>
 </body>
 </html>

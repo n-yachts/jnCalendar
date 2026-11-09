@@ -1,7 +1,7 @@
-import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1440';
-import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, TYPES, AuthError } from './calendar.js?v=20261109-1440';
-import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1440';
-import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1440';
+import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1450';
+import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, TYPES, AuthError } from './calendar.js?v=20261109-1450';
+import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1450';
+import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1450';
 
 // ---------- Stav ----------
 const LS = { client: 'jn.clientId', cal: 'jn.calendarId', step: 'jn.setupStep', range: 'jn.agendaRange', tab: 'jn.tab' };
@@ -738,6 +738,100 @@ $('#btn-reset').onclick = async () => {
 document.addEventListener('click', e => {
   if (e.target.matches('[data-close]')) e.target.closest('dialog').close();
 });
+
+// ---------- Export / import ----------
+const EXPORT_FIELDS = ['type', 'title', 'date', 'repeat', 'remindDays', 'emailReminder', 'price', 'currency', 'note', 'noYear', 'lastDone'];
+const itemKey = i => `${i.type}|${String(i.title).trim().toLowerCase()}`;
+let importQueue = [];
+
+$('#btn-export').onclick = () => {
+  const data = {
+    app: 'jnCalendar',
+    format: 1,
+    exported: new Date().toISOString(),
+    items: state.items.map(i => Object.fromEntries(EXPORT_FIELDS.map(k => [k, i[k]]))),
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `jnCalendar-${todayStr()}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast(`Exportováno ${data.items.length} položek`);
+};
+
+$('#btn-import').onclick = () => { $('#import-file').value = ''; $('#import-file').click(); };
+
+function cleanImported(raw) {
+  if (!raw || typeof raw.title !== 'string' || !raw.title.trim()) return null;
+  if (typeof raw.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(raw.date)) return null;
+  const type = raw.type in TYPES ? raw.type : 'jine';
+  const freq = ['none', 'monthly', 'yearly'].includes(raw.repeat?.freq) ? raw.repeat.freq : 'none';
+  return {
+    type,
+    title: raw.title.trim().slice(0, 120),
+    date: raw.date,
+    repeat: { freq, interval: Math.min(60, Math.max(1, parseInt(raw.repeat?.interval, 10) || 1)) },
+    remindDays: Math.min(28, Math.max(0, parseInt(raw.remindDays, 10) || 0)),
+    emailReminder: !!raw.emailReminder,
+    price: raw.price ? String(raw.price) : '',
+    currency: ['Kč', '€', '$'].includes(raw.currency) ? raw.currency : 'Kč',
+    note: typeof raw.note === 'string' ? raw.note.slice(0, 900) : '',
+    noYear: !!raw.noYear,
+    lastDone: typeof raw.lastDone === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.lastDone) ? raw.lastDone : '',
+  };
+}
+
+$('#import-file').onchange = async e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  let data;
+  try { data = JSON.parse(await file.text()); } catch { return toast('Soubor nejde přečíst. Je to export z jnCalendar?', 'error'); }
+  if (data?.app !== 'jnCalendar' || !Array.isArray(data.items)) return toast('Tohle není export z jnCalendar.', 'error');
+
+  const existing = new Set(state.items.map(itemKey));
+  const valid = data.items.map(cleanImported).filter(Boolean);
+  const invalid = data.items.length - valid.length;
+  importQueue = valid.filter(i => !existing.has(itemKey(i)));
+  const dup = valid.length - importQueue.length;
+
+  const byType = {};
+  for (const i of importQueue) byType[i.type] = (byType[i.type] || 0) + 1;
+  $('#import-summary').innerHTML = `
+    <p>Soubor <b>${esc(file.name)}</b>${data.exported ? `, exportováno ${formatCz(data.exported.slice(0, 10))}` : ''}.</p>
+    <p><b>${importQueue.length}</b> položek se přidá do kalendáře jnCalendar tohoto účtu:</p>
+    <p class="muted">${Object.entries(byType).map(([k, n]) => `${TYPES[k].icon} ${esc(TYPES[k].short || TYPES[k].label)} ${n}`).join(' · ') || '—'}</p>
+    ${dup ? `<p class="hint">${dup} položek tu už je (stejný typ a název), ty se přeskočí.</p>` : ''}
+    ${invalid ? `<p class="hint">${invalid} položek je poškozených a nenačtou se.</p>` : ''}`;
+  $('#btn-import-go').disabled = !importQueue.length;
+  $('#btn-import-go').textContent = 'Importovat';
+  $('#dlg-settings').close();
+  $('#dlg-import').showModal();
+};
+
+$('#btn-import-go').onclick = async () => {
+  if (!importQueue.length) return;
+  try { await ensureAuth(); } catch (err) { return toast(err.message, 'error'); }
+  const btn = $('#btn-import-go');
+  btn.disabled = true; $('#btn-import-cancel').disabled = true;
+  let done = 0, failed = 0;
+  for (const item of importQueue) {
+    btn.textContent = `Importuji ${done + failed + 1}/${importQueue.length}…`;
+    try {
+      state.items.push(await saveItem(state.calendarId, item));
+      done++;
+    } catch (err) {
+      if (err instanceof AuthError) { handleError(err); break; }
+      failed++;
+    }
+  }
+  $('#btn-import-cancel').disabled = false;
+  $('#dlg-import').close();
+  importQueue = [];
+  try { await refreshAgenda(); } catch {}
+  renderAll();
+  toast(failed ? `Importováno ${done}, nepodařilo se ${failed}.` : `Importováno ${done} položek ✓`, failed ? 'error' : '');
+};
 
 // ---------- Start ----------
 async function start() {
