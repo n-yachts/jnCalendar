@@ -209,7 +209,7 @@ výpověď pojistky 6 týdnů). Při změně je znovu ověř a uveď v nápověd
 | Skutečný Google | automaticky testovat nejde (OAuth). Změny přihlášení a API ověř ručně s uživatelem. |
 | Nasazení | commit + push do `main` → GitHub Pages (≈1 min). Stav: `gh api repos/n-yachts/lhutnik/deployments`. |
 
-Pracovní kopie u uživatele: `C:\Users\jnovacek\source\repos\jnCalendar` (Windows, Visual Studio).
+Pracovní kopie u uživatele: `C:\Users\jnovacek\source\repos\lhutnik` (Windows, Visual Studio).
 
 ---
 
