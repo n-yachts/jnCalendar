@@ -1,7 +1,7 @@
-import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1450';
-import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, TYPES, AuthError } from './calendar.js?v=20261109-1450';
-import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1450';
-import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1450';
+import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1510';
+import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, TYPES, AuthError } from './calendar.js?v=20261109-1510';
+import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1510';
+import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1510';
 
 // ---------- Stav ----------
 const LS = { client: 'jn.clientId', cal: 'jn.calendarId', step: 'jn.setupStep', range: 'jn.agendaRange', tab: 'jn.tab' };
@@ -45,6 +45,11 @@ const SETUP = [
     title: 'Vítejte',
     html: () => `
       <h1>Vítejte v jnCalendar</h1>
+      <a class="help-card" href="help.html" target="_blank" rel="noopener">
+        <span class="hc-icon">📖</span>
+        <span><b>Podrobná nápověda s obrázky</b><br>
+        <span class="muted">Jak aplikaci nastavit a používat, krok za krokem. Otevře se v nové záložce.</span></span>
+      </a>
       <p>Aplikace hlídá důležitá data a ukládá je do samostatného Google kalendáře
          <b>jnCalendar</b> včetně připomínek:</p>
       <ul class="features">
@@ -145,7 +150,8 @@ const SETUP = [
       <h2>5. Přihlaste se</h2>
       <p>Hotovo. Teď se přihlaste svým Google účtem. Při prvním přihlášení:</p>
       <ol>
-        <li>Pokud se objeví „Google tuto aplikaci neověřil“, klikněte na <b>Pokračovat</b>.</li>
+        <li>Pokud se objeví „Google tuto aplikaci neověřil“, klikněte na <b>Pokračovat</b>
+            (případně nejdřív na <b>Rozšířené</b> a pak <b>Přejít na jnCalendar</b>).</li>
         <li>Zaškrtněte obě oprávnění ke kalendáři.</li>
       </ol>
       <p>Aplikace pak založí kalendář <b>jnCalendar</b> a můžete přidávat položky.</p>`,
@@ -767,6 +773,14 @@ function cleanImported(raw) {
   if (typeof raw.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(raw.date)) return null;
   const type = raw.type in TYPES ? raw.type : 'jine';
   const freq = ['none', 'monthly', 'yearly'].includes(raw.repeat?.freq) ? raw.repeat.freq : 'none';
+  const t = TYPES[type];
+  if (t.yearly) { // narozeniny, výročí a svátky se vždy opakují každý rok
+    const base = cleanImported({ ...raw, type: 'jine' });
+    return base && {
+      ...base, type,
+      repeat: { freq: 'yearly', interval: 1 }, price: '', noYear: !!t.noYear || !!raw.noYear,
+    };
+  }
   return {
     type,
     title: raw.title.trim().slice(0, 120),

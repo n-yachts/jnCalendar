@@ -6,6 +6,9 @@ Každá položka se uloží jako celodenní událost do samostatného Google kal
 a dostane připomínku. Připomínky tak chodí z Google kalendáře do telefonu i počítače,
 ať je aplikace spuštěná, nebo ne.
 
+📖 **Podrobná nápověda s obrázky:** [n-yachts.github.io/jnCalendar/help.html](https://n-yachts.github.io/jnCalendar/help.html)
+(v aplikaci tlačítko *❓ Nápověda* a odkaz na první stránce průvodce).
+
 ## Co umí
 
 - **Přehled:** nadcházející události z kalendáře jnCalendar seřazené podle data a seskupené po měsících.
@@ -108,6 +111,13 @@ na https://n-yachts.github.io/jnCalendar/ zhruba do minuty.
 Soubory se načítají s číslem verze (`?v=…`), aby prohlížeč po nasazení nebral staré soubory
 z mezipaměti. Aktuální verzi vidíte v *Nastavení*.
 
+Při změně aplikace (podrobně v `CLAUDE.md`):
+
+```
+python tools/screenshots.py   # nové náhledy do nápovědy (Python + Playwright)
+python tools/stamp.py         # nové číslo verze souborů
+```
+
 ## Soubory
 
 ```
@@ -118,6 +128,9 @@ js/auth.js      přihlášení přes Google
 js/calendar.js  volání Calendar API, převod položka ↔ událost
 js/dates.js     práce s daty, opakování, připomínky
 js/svatky.js    český kalendář jmen (data z balíčku namedays, MIT licence)
+help.html       nápověda; náhledy obrazovek v help/img/
+tools/          screenshots.py (náhledy do nápovědy), stamp.py (verze souborů)
+CLAUDE.md       pokyny pro úpravy (nápověda, náhledy, verze)
 server.ps1      lokální server na portu 8080
 start.cmd       spouštěč
 ```

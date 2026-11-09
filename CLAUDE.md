@@ -1,0 +1,27 @@
+# jnCalendar – pokyny pro úpravy
+
+Statická webová aplikace (HTML + JS moduly, bez buildu) nad Google Calendar API.
+Nasazuje se přes GitHub Pages z větve `main`: https://n-yachts.github.io/jnCalendar/
+
+## Při každé změně aplikace
+
+1. **Aktualizuj nápovědu `help.html`** – nové funkce, změněné texty, popisky tlačítek, tabulky typů.
+   Nápověda musí odpovídat tomu, co aplikace skutečně dělá.
+2. **Přegeneruj náhledy** do `help/img/`: `python tools/screenshots.py`
+   (Playwright, napodobený Google, ukázková data, pevné datum 9. 11. 2026).
+   Nová obrazovka nebo funkce → přidej snímek do skriptu i do `help.html`. Snímky si prohlédni.
+3. **README.md** – stručný přehled funkcí drž v souladu s nápovědou.
+4. **Verze**: `python tools/stamp.py` – doplní `?v=…` k CSS, JS modulům a obrázkům nápovědy,
+   jinak prohlížeče (GitHub Pages cache 10 min) drží staré soubory.
+5. Uživatelské texty jsou česky. Nový typ položky = `TYPES` v `js/calendar.js`, `DEFAULTS`
+   a `occasion()` v `js/app.js`, barva `.item.t-…` ve `styles.css`, úvod průvodce, nápověda, README.
+
+## Struktura
+
+- `index.html`, `styles.css` – aplikace; `help.html` – nápověda (odkaz v hlavičce, v 1. kroku průvodce a u přihlášení)
+- `js/app.js` – UI, průvodce, přehled, formulář, Hotovo, export/import
+- `js/calendar.js` – REST volání, převod položka ↔ událost (data v `extendedProperties.private`)
+- `js/auth.js` – Google Identity Services (token model), oprávnění `calendar.app.created` + `calendar.calendarlist.readonly`
+- `js/dates.js` – data bez časové zóny, opakování, připomínky; `js/svatky.js` – český kalendář jmen
+- `server.ps1` + `start.cmd` – lokální server na `http://localhost:8080`
+- `tools/` – `screenshots.py` (náhledy do nápovědy), `stamp.py` (verze souborů)

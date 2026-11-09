@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>jnCalendar</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
-  <link rel="stylesheet" href="styles.css?v=20261109-1450">
+  <link rel="stylesheet" href="styles.css?v=20261109-1510">
 </head>
 <body>
   <header class="topbar">
     <div class="brand"><span class="logo">📅</span> jnCalendar</div>
     <nav class="top-actions">
-      <button id="btn-refresh" class="ghost" hidden title="Načíst znovu z Google kalendáře">⟳ Obnovit</button>
-      <button id="btn-settings" class="ghost" title="Nastavení">⚙︎ Nastavení</button>
+      <button id="btn-refresh" class="ghost" hidden title="Načíst znovu z Google kalendáře">⟳<span class="lbl"> Obnovit</span></button>
+      <button id="btn-settings" class="ghost" title="Nastavení">⚙︎<span class="lbl"> Nastavení</span></button>
+      <a id="btn-help" class="btn ghost" href="help.html" target="_blank" rel="noopener" title="Nápověda">❓<span class="lbl">Nápověda</span></a>
     </nav>
   </header>
 
@@ -40,7 +41,9 @@
       <h1>Přihlášení</h1>
       <p class="muted">Aplikace potřebuje přístup ke kalendáři „jnCalendar“, který si sama založí. Do vašich ostatních kalendářů nezasahuje.</p>
       <button id="btn-signin" class="primary big">Přihlásit se přes Google</button>
-      <p class="hint">Pokud uvidíte „Google tuto aplikaci neověřil“, klikněte na <b>Pokračovat</b>. Je to vaše vlastní aplikace.</p>
+      <p class="hint">Pokud uvidíte „Google tuto aplikaci neověřil“, klikněte na <b>Pokračovat</b>
+         (případně <b>Rozšířené</b> → <b>Přejít na jnCalendar</b>). Je to vaše vlastní aplikace.</p>
+      <p class="hint"><a href="help.html#prihlaseni" target="_blank" rel="noopener">📖 Nápověda k přihlášení</a></p>
     </section>
 
     <!-- Hlavní přehled -->
@@ -180,6 +183,6 @@
 
   <div id="toast" class="toast" role="status" popover="manual"></div>
 
-  <script type="module" src="js/app.js?v=20261109-1450"></script>
+  <script type="module" src="js/app.js?v=20261109-1510"></script>
 </body>
 </html>
