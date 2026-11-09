@@ -20,6 +20,9 @@ ať je aplikace spuštěná, nebo ne.
 - **Lékařské prohlídky:** rychlá volba běžných preventivních prohlídek s obvyklými intervaly
   (praktický lékař každé 2 roky, zubař 2× ročně, gynekolog každý rok, mamografie každé 2 roky
   od 45 let). Po návštěvě stačí upravit datum na nový termín.
+- **✓ Hotovo** (STK, lékařské prohlídky, údržba): v detailu položky zadáte, kdy jste ji provedli,
+  a termín se posune o nastavený interval (např. STK provedená 9. 11. 2026 → platí do 9. 11. 2028).
+  Aplikace si pamatuje, kdy to bylo naposledy.
 - **Položky:** správa všeho, co je v kalendáři, se souhrnem prošlých záruk a měsíční ceny předplatných.
 
 ## Spuštění
@@ -86,6 +89,9 @@ kalendář „jnCalendar“ nasdílet v Google kalendáři.
 
 Webová verze se nasazuje automaticky z větve `main`: po `git push` je změna
 na https://n-yachts.github.io/jnCalendar/ zhruba do minuty.
+
+Soubory se načítají s číslem verze (`?v=…`), aby prohlížeč po nasazení nebral staré soubory
+z mezipaměti. Aktuální verzi vidíte v *Nastavení*.
 
 ## Soubory
 

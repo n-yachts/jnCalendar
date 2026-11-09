@@ -1,6 +1,6 @@
 // Tenká vrstva nad Google Calendar REST API (v3) a převod položek na události.
-import { getStoredToken, clearToken } from './auth.js';
-import { addDays, toRRule, fromRRule, remindDaysToMinutes, minutesToRemindDays } from './dates.js';
+import { getStoredToken, clearToken } from './auth.js?v=20261109-1440';
+import { addDays, toRRule, fromRRule, remindDaysToMinutes, minutesToRemindDays } from './dates.js?v=20261109-1440';
 
 const API = 'https://www.googleapis.com/calendar/v3';
 export const CALENDAR_NAME = 'jnCalendar';
@@ -111,6 +111,7 @@ export function itemToEvent(item) {
         jnCurrency: item.currency || '',
         jnNote: (item.note || '').slice(0, 900), // limit hodnoty je 1024 znaků
         jnNoYear: item.noYear ? '1' : '',
+        jnLastDone: item.lastDone || '',
       },
     },
   };
@@ -131,6 +132,7 @@ export function eventToItem(ev) {
     currency: p.jnCurrency || 'Kč',
     note: p.jnNote || '',
     noYear: p.jnNoYear === '1',
+    lastDone: p.jnLastDone || '',
     link: ev.htmlLink,
   };
 }

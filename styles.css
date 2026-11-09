@@ -216,3 +216,8 @@ dialog form, .dlg-pad { padding: 1.5rem; }
 .presets { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; margin: -.4rem 0 1rem; }
 .presets .hint { margin-right: .2rem; }
 .chip.small { font-size: .82rem; padding: .25rem .65rem; }
+.done-box { background: var(--soon-bg); border-radius: 10px; padding: .8rem 1rem .2rem; margin: -.2rem 0 1rem; }
+.done-row { display: flex; gap: .75rem; align-items: end; }
+.done-row label { margin-bottom: .6rem; max-width: 200px; }
+.done-row button { margin-bottom: .6rem; }
+.done-box .hint { margin: 0 0 .6rem; }

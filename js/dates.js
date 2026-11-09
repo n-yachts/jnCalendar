@@ -111,3 +111,19 @@ export function relativeCz(days) {
 export function yearsAt(start, next) {
   return parseDate(next).y - parseDate(start).y;
 }
+
+/** Přičte měsíce; když den v cílovém měsíci neexistuje, použije poslední den měsíce. */
+export function addMonths(s, months) {
+  const { y, m, d } = parseDate(s);
+  const idx = (m - 1) + months;
+  const ny = y + Math.floor(idx / 12);
+  const nm = ((idx % 12) + 12) % 12 + 1;
+  const dim = new Date(Date.UTC(ny, nm, 0)).getUTCDate();
+  return formatDate({ y: ny, m: nm, d: Math.min(d, dim) });
+}
+
+/** Délka opakování v měsících (0 = neopakuje se). */
+export function repeatMonths(repeat) {
+  if (!repeat || repeat.freq === 'none') return 0;
+  return (repeat.freq === 'yearly' ? 12 : 1) * Math.max(1, repeat.interval || 1);
+}

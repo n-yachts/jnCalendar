@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>jnCalendar</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20261109-1440">
 </head>
 <body>
   <header class="topbar">
@@ -78,6 +78,15 @@
   <dialog id="dlg-item">
     <form id="form-item" method="dialog">
       <h2 id="item-title">Nová položka</h2>
+      <div id="done-box" class="done-box" hidden>
+        <div class="done-row">
+          <label>Provedeno dne
+            <input id="done-date" type="date">
+          </label>
+          <button type="button" id="btn-done" class="primary">✓ Hotovo</button>
+        </div>
+        <p id="done-info" class="hint"></p>
+      </div>
       <div class="type-pick" id="type-pick"></div>
       <div class="presets" id="presets" hidden></div>
       <label>Název
@@ -135,6 +144,7 @@
         <dt>Client ID</dt><dd id="set-client" class="mono"></dd>
         <dt>Adresa aplikace</dt><dd id="set-origin" class="mono"></dd>
         <dt>Kalendář</dt><dd id="set-cal" class="mono"></dd>
+        <dt>Verze</dt><dd id="set-ver" class="mono"></dd>
       </dl>
       <div class="dlg-actions wrap">
         <button id="btn-open-cal" class="ghost">Otevřít Google kalendář</button>
@@ -148,6 +158,6 @@
 
   <div id="toast" class="toast" role="status" popover="manual"></div>
 
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/app.js?v=20261109-1440"></script>
 </body>
 </html>

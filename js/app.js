@@ -1,7 +1,7 @@
-import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js';
-import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, TYPES, AuthError } from './calendar.js';
-import { nextOccurrence, daysBetween, todayStr, addDays, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js';
-import { findNameDay, nameDayOn } from './svatky.js';
+import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1440';
+import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, TYPES, AuthError } from './calendar.js?v=20261109-1440';
+import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1440';
+import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1440';
 
 // ---------- Stav ----------
 const LS = { client: 'jn.clientId', cal: 'jn.calendarId', step: 'jn.setupStep', range: 'jn.agendaRange', tab: 'jn.tab' };
@@ -309,7 +309,7 @@ function renderMain() {
         <div class="icon">${t.icon}</div>
         <div class="body">
           <div class="name">${esc(i.title)}</div>
-          <div class="meta">${t.label}${rep ? ` · ${rep}` : ''}${price ? ` · ${price}` : ''}${i.note ? ` · <span class="note">${esc(i.note)}</span>` : ''}</div>
+          <div class="meta">${t.label}${rep ? ` · ${rep}` : ''}${i.lastDone ? ` · naposledy ${formatCz(i.lastDone)}` : ''}${price ? ` · ${price}` : ''}${i.note ? ` · <span class="note">${esc(i.note)}</span>` : ''}</div>
         </div>
         <div class="when ${cls}">
           <b>${relativeCz(i.days)}</b>
@@ -479,8 +479,8 @@ $('#agenda').onkeydown = e => { if (e.key === 'Enter' && e.target.matches('li'))
 // ---------- Formulář ----------
 const DEFAULTS = {
   zaruka:     { freq: 'none',    remindDays: 28, dateLabel: 'Konec záruky' },
-  doklad:     { freq: 'none',    remindDays: 28, dateLabel: 'Platnost do', placeholder: 'např. Cestovní pas – Jan, Řidičský průkaz, Průkaz vůdce plavidla' },
-  stk:        { freq: 'yearly', interval: 2, remindDays: 28, dateLabel: 'Platnost STK do', placeholder: 'např. Škoda Octavia 1AB 2345, přívěs' },
+  doklad:     { freq: 'none',    remindDays: 28, dateLabel: 'Platnost do', placeholder: 'např. Cestovní pas – Jan, Řidičský průkaz, Průkaz vůdce plavidla', notePlaceholder: 'číslo dokladu, kde se vyřizuje, co s sebou…' },
+  stk:        { freq: 'yearly', interval: 2, remindDays: 28, dateLabel: 'Platnost STK do', placeholder: 'např. Škoda Octavia 1AB 2345, přívěs', notePlaceholder: 'STK stanice, číslo protokolu, závady k opravě…' },
   predplatne: { freq: 'monthly', remindDays: 3,  dateLabel: 'Další platba' },
   udrzba:     { freq: 'yearly',  remindDays: 14, dateLabel: 'Termín' },
   prohlidka:  { freq: 'yearly', interval: 2, remindDays: 14, dateLabel: 'Termín další prohlídky',
@@ -591,9 +591,58 @@ function openItem(item) {
     form.date.value = todayStr();
   }
   syncInterval();
+  setupDone(item);
   $('#dlg-item').showModal();
   form.title.focus();
 }
+
+// ---------- Hotovo (STK, prohlídky, údržba) ----------
+// Po provedení posune termín: datum provedení + interval opakování.
+const DONE_TYPES = ['stk', 'prohlidka', 'udrzba'];
+
+function doneNext(item, doneDate) {
+  const months = repeatMonths(item.repeat);
+  return months ? addMonths(doneDate, months) : null;
+}
+
+function setupDone(item) {
+  const box = $('#done-box');
+  const ok = item && DONE_TYPES.includes(item.type) && repeatMonths(item.repeat) > 0;
+  box.hidden = !ok;
+  if (!ok) return;
+  $('#done-date').value = todayStr();
+  updateDoneInfo();
+}
+
+function updateDoneInfo() {
+  const it = state.editing;
+  const d = $('#done-date').value;
+  if (!it || !d) { $('#done-info').textContent = ''; return; }
+  const next = doneNext(it, d);
+  const what = it.type === 'stk' ? 'Nová platnost STK do' : 'Další termín';
+  $('#done-info').innerHTML = `${what} <b>${formatCz(next)}</b>` +
+    (it.lastDone ? ` · naposledy provedeno ${formatCz(it.lastDone)}` : '');
+}
+$('#done-date').addEventListener('input', updateDoneInfo);
+
+$('#btn-done').onclick = async () => {
+  const it = state.editing;
+  const doneDate = $('#done-date').value;
+  if (!it || !doneDate) return;
+  try { await ensureAuth(); } catch (err) { return toast(err.message, 'error'); }
+  const next = doneNext(it, doneDate);
+  busy(true);
+  try {
+    const saved = await saveItem(state.calendarId, { ...it, date: next, lastDone: doneDate });
+    const idx = state.items.findIndex(i => i.id === saved.id);
+    if (idx >= 0) state.items[idx] = saved;
+    $('#dlg-item').close();
+    await refreshAgenda();
+    renderAll();
+    toast(`Hotovo ✓ Další termín ${formatCz(next)}`);
+  } catch (err) { handleError(err); }
+  finally { busy(false); }
+};
 
 form.onsubmit = async e => {
   e.preventDefault();
@@ -608,6 +657,7 @@ form.onsubmit = async e => {
     price: form.price.value,
     currency: form.currency.value,
     note: form.note.value.trim(),
+    lastDone: state.editing?.lastDone || '',
   };
   if (!item.title || !item.date) return;
   const t = TYPES[item.type];
@@ -661,6 +711,7 @@ $('#btn-settings').onclick = () => {
   $('#set-client').textContent = store.get(LS.client) || '—';
   $('#set-origin').textContent = location.origin;
   $('#set-cal').textContent = state.calendarId || '—';
+  $('#set-ver').textContent = new URL(import.meta.url).searchParams.get('v') || 'vývojová';
   $('#dlg-settings').showModal();
 };
 $('#btn-open-cal').onclick = () => {
