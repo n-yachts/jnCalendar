@@ -1,10 +1,13 @@
 // Tenká vrstva nad Google Calendar REST API (v3) a převod položek na události.
-import { TYPES } from './catalog.js?v=20261109-1800';
-import { getStoredToken, clearToken } from './auth.js?v=20261109-1800';
-import { addDays, toRRule, fromRRule, remindDaysToMinutes, minutesToRemindDays } from './dates.js?v=20261109-1800';
+import { TYPES } from './catalog.js?v=20261109-1815';
+import { getStoredToken, clearToken } from './auth.js?v=20261109-1815';
+import { addDays, toRRule, fromRRule, remindDaysToMinutes, minutesToRemindDays } from './dates.js?v=20261109-1815';
 
 const API = 'https://www.googleapis.com/calendar/v3';
-export const CALENDAR_NAME = 'jnCalendar';
+export const CALENDAR_NAME = 'Lhůtník';
+// Dřívější názvy kalendáře – najde se i pod nimi a přejmenuje se na CALENDAR_NAME.
+const LEGACY_NAMES = ['jnCalendar'];
+const CALENDAR_DESCRIPTION = 'Narozeniny, svátky, termíny, pojistky, zdraví, údržba auta, lodi a domu – spravuje aplikace Lhůtník (https://n-yachts.github.io/lhutnik/).';
 
 export class AuthError extends Error {}
 
@@ -32,28 +35,53 @@ async function call(path, { method = 'GET', body, query } = {}) {
 
 // ---------- Kalendář ----------
 
-/** Najde kalendář jnCalendar, ke kterému máme přístup, nebo ho založí. */
+/** Najde kalendář aplikace (i pod dřívějším názvem), ke kterému máme přístup, nebo ho založí. */
 export async function ensureCalendar(knownId) {
-  if (knownId && await canAccess(knownId)) return knownId;
+  if (knownId && await canAccess(knownId)) {
+    await renameIfLegacy(knownId);
+    return knownId;
+  }
 
+  const names = [CALENDAR_NAME, ...LEGACY_NAMES];
+  let found = null;
   let pageToken;
   do {
     const list = await call('/users/me/calendarList', { query: { pageToken, minAccessRole: 'owner' } });
     for (const c of list.items || []) {
-      if (c.summary === CALENDAR_NAME && await canAccess(c.id)) return c.id;
+      if (names.includes(c.summary) && await canAccess(c.id)) { found = c.id; break; }
     }
-    pageToken = list.nextPageToken;
+    pageToken = found ? null : list.nextPageToken;
   } while (pageToken);
+  if (found) {
+    await renameIfLegacy(found);
+    return found;
+  }
 
   const created = await call('/calendars', {
     method: 'POST',
     body: {
       summary: CALENDAR_NAME,
-      description: 'Narozeniny, svátky, termíny, pojistky, zdraví, údržba auta, lodi a domu – spravuje aplikace jnCalendar (https://n-yachts.github.io/jnCalendar/).',
+      description: CALENDAR_DESCRIPTION,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Prague',
     },
   });
   return created.id;
+}
+
+/** Kalendář se starým názvem (Lhůtník) přejmenuje. Položky v něm zůstanou. */
+async function renameIfLegacy(id) {
+  try {
+    const cal = await call(`/calendars/${encodeURIComponent(id)}`);
+    if (cal.summary === CALENDAR_NAME) return;
+    if (!LEGACY_NAMES.includes(cal.summary)) return; // uživatel si ho přejmenoval sám – nechat být
+    await call(`/calendars/${encodeURIComponent(id)}`, {
+      method: 'PATCH',
+      body: { summary: CALENDAR_NAME, description: CALENDAR_DESCRIPTION },
+    });
+  } catch (e) {
+    if (e instanceof AuthError) throw e;
+    console.warn('Kalendář se nepodařilo přejmenovat:', e); // nevadí, aplikace funguje dál
+  }
 }
 
 async function canAccess(id) {
@@ -94,7 +122,7 @@ export function itemToEvent(item) {
   const lines = [];
   if (item.price) lines.push(`Cena: ${item.price} ${item.currency || 'Kč'}`);
   if (item.note) lines.push(item.note);
-  lines.push('', '— spravováno aplikací jnCalendar');
+  lines.push('', '— spravováno aplikací Lhůtník');
 
   const minutes = remindDaysToMinutes(item.remindDays ?? 7);
   const overrides = [{ method: 'popup', minutes }];
@@ -179,10 +207,10 @@ export async function deleteItem(calendarId, id) {
   await call(`/calendars/${encodeURIComponent(calendarId)}/events/${encodeURIComponent(id)}`, { method: 'DELETE' });
 }
 
-// ---------- Přehled: jednotlivé výskyty v kalendáři jnCalendar ----------
+// ---------- Přehled: jednotlivé výskyty v kalendáři Lhůtník ----------
 
 /**
- * Vrátí výskyty událostí z kalendáře jnCalendar v rozsahu dat [fromDate, toDate)
+ * Vrátí výskyty událostí z kalendáře Lhůtník v rozsahu dat [fromDate, toDate)
  * (YYYY-MM-DD), opakované události rozložené na jednotlivé dny.
  * Každý výskyt nese `masterId` – ID položky, ze které vznikl.
  */

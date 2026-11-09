@@ -1,4 +1,4 @@
-﻿# Jednoduchý lokální webový server pro jnCalendar (bez instalace čehokoli).
+﻿# Jednoduchý lokální webový server pro Lhůtník (bez instalace čehokoli).
 # Spouští se přes start.cmd. Ukončení: Ctrl+C nebo zavřením okna.
 param(
   [int]$Port = 8080,
@@ -32,7 +32,7 @@ try {
 }
 
 Write-Host ""
-Write-Host "  jnCalendar běží na $prefix" -ForegroundColor Green
+Write-Host "  Lhůtník běží na $prefix" -ForegroundColor Green
 Write-Host "  Okno nechte otevřené. Ukončíte ho klávesami Ctrl+C."
 Write-Host ""
 

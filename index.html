@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>jnCalendar</title>
+  <title>Lhůtník</title>
   <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#1f5f8b">
@@ -11,12 +11,12 @@
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="jnCalendar">
-  <link rel="stylesheet" href="styles.css?v=20261109-1800">
+  <meta name="apple-mobile-web-app-title" content="Lhůtník">
+  <link rel="stylesheet" href="styles.css?v=20261109-1815">
 </head>
 <body>
   <header class="topbar">
-    <div class="brand"><span class="logo">📅</span> jnCalendar</div>
+    <div class="brand"><img class="logo" src="icons/icon-192.png" alt="" width="26" height="26"> Lhůtník</div>
     <nav class="top-actions">
       <button id="btn-install-top" class="ghost" hidden title="Nainstalovat jako aplikaci">📲<span class="lbl"> Nainstalovat</span></button>
       <button id="btn-refresh" class="ghost" hidden title="Načíst znovu z Google kalendáře">⟳<span class="lbl"> Obnovit</span></button>
@@ -30,7 +30,7 @@
     <section id="view-file" class="card narrow" hidden>
       <h1>Otevřete aplikaci přes web nebo start.cmd</h1>
       <p>Google přihlášení nefunguje u stránky otevřené přímo ze souboru. Použijte webovou verzi
-         <a href="https://n-yachts.github.io/jnCalendar/">n-yachts.github.io/jnCalendar</a>,
+         <a href="https://n-yachts.github.io/lhutnik/">n-yachts.github.io/lhutnik</a>,
          nebo spusťte <code>start.cmd</code> ve složce projektu (otevře se <code>http://localhost:8080</code>).</p>
     </section>
 
@@ -47,10 +47,10 @@
     <!-- Přihlášení -->
     <section id="view-signin" class="card narrow center" hidden>
       <h1>Přihlášení</h1>
-      <p class="muted">Aplikace potřebuje přístup ke kalendáři „jnCalendar“, který si sama založí. Do vašich ostatních kalendářů nezasahuje.</p>
+      <p class="muted">Aplikace potřebuje přístup ke kalendáři „Lhůtník“, který si sama založí. Do vašich ostatních kalendářů nezasahuje.</p>
       <button id="btn-signin" class="primary big">Přihlásit se přes Google</button>
       <p class="hint">Pokud uvidíte „Google tuto aplikaci neověřil“, klikněte na <b>Pokračovat</b>
-         (případně <b>Rozšířené</b> → <b>Přejít na jnCalendar</b>). Je to vaše vlastní aplikace.</p>
+         (případně <b>Rozšířené</b> → <b>Přejít na …</b> (název vaší aplikace)). Je to vaše vlastní aplikace.</p>
       <p class="hint"><a href="help.html#prihlaseni" target="_blank" rel="noopener">📖 Nápověda k přihlášení</a></p>
     </section>
 
@@ -202,6 +202,6 @@
 
   <div id="toast" class="toast" role="status" popover="manual"></div>
 
-  <script type="module" src="js/app.js?v=20261109-1800"></script>
+  <script type="module" src="js/app.js?v=20261109-1815"></script>
 </body>
 </html>

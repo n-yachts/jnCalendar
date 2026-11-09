@@ -1,18 +1,18 @@
-# jnCalendar
+# Lhůtník
 
 Malá webová aplikace, která hlídá periodické události: **narozeniny, svátky, výročí, platnost dokladů,
 STK, pojistky a smlouvy, daně, prohlídky a očkování, péči o zvířata, údržbu auta, lodi, domu
 a zahrady, předplatná a záruky**.
-Každá položka se uloží jako celodenní událost do samostatného Google kalendáře **jnCalendar**
+Každá položka se uloží jako celodenní událost do samostatného Google kalendáře **Lhůtník**
 a dostane připomínku. Připomínky tak chodí z Google kalendáře do telefonu i počítače,
 ať je aplikace spuštěná, nebo ne.
 
-📖 **Podrobná nápověda s obrázky:** [n-yachts.github.io/jnCalendar/help.html](https://n-yachts.github.io/jnCalendar/help.html)
+📖 **Podrobná nápověda s obrázky:** [n-yachts.github.io/lhutnik/help.html](https://n-yachts.github.io/lhutnik/help.html)
 (v aplikaci tlačítko *❓ Nápověda* a odkaz na první stránce průvodce).
 
 ## Co umí
 
-- **Přehled:** nadcházející události z kalendáře jnCalendar seřazené podle data a seskupené po měsících.
+- **Přehled:** nadcházející události z kalendáře Lhůtník seřazené podle data a seskupené po měsících.
   Dny, kdy nic není, se vynechají. Filtr podle typu (nebo jen *Lidé*: narozeniny, svátky, výročí)
   a rozsah měsíc / 3 měsíce / rok. Nahoře je vidět, kdo má dnes a zítra svátek.
 - **17 typů položek ve skupinách:**
@@ -35,7 +35,7 @@ ať je aplikace spuštěná, nebo ne.
 
 ### Na webu (počítač i mobil)
 
-**https://n-yachts.github.io/jnCalendar/**
+**https://n-yachts.github.io/lhutnik/**
 
 Běží na GitHub Pages z tohoto repozitáře.
 
@@ -60,7 +60,7 @@ Obě verze pracují se stejným kalendářem, takže data jsou všude stejná.
 
 | Krok | Kde | Co udělat |
 |---|---|---|
-| 1 | [Nový projekt](https://console.cloud.google.com/projectcreate) | Název `jnCalendar` → Vytvořit |
+| 1 | [Nový projekt](https://console.cloud.google.com/projectcreate) | Název `Lhutnik` → Vytvořit |
 | 2 | [Google Calendar API](https://console.cloud.google.com/apis/library/calendar-json.googleapis.com) | Povolit |
 | 3 | [Google Auth Platform](https://console.cloud.google.com/auth/overview) | Začít → název, e-mail, cílová skupina **Externí** |
 | 3b | [Audience](https://console.cloud.google.com/auth/audience) | **Publikovat aplikaci** (jinak přihlášení po 7 dnech vyprší) |
@@ -75,9 +75,9 @@ Při přihlášení uvidíte „Google tuto aplikaci neověřil“: je to vaše 
 Aplikace žádá jen tato oprávnění:
 
 - `calendar.app.created`: vytvořit vlastní kalendář a spravovat události **pouze v něm**.
-- `calendar.calendarlist.readonly`: přečíst seznam kalendářů, aby našla už založený „jnCalendar“.
+- `calendar.calendarlist.readonly`: přečíst seznam kalendářů, aby našla už založený „Lhůtník“.
 
-Do ostatních kalendářů nevidí a nic v nich nemění. Přehled čte jen kalendář jnCalendar.
+Do ostatních kalendářů nevidí a nic v nich nemění. Přehled čte jen kalendář Lhůtník.
 
 ## Jak to funguje
 
@@ -93,8 +93,8 @@ Do ostatních kalendářů nevidí a nic v nich nemění. Přehled čte jen kale
 
 V *Nastavení → Přenos položek*:
 
-- **Exportovat do souboru** uloží všechny položky do souboru `jnCalendar-RRRR-MM-DD.json`.
-- **Importovat ze souboru** je přidá do kalendáře jnCalendar účtu, který je právě přihlášený.
+- **Exportovat do souboru** uloží všechny položky do souboru `lhutnik-RRRR-MM-DD.json`.
+- **Importovat ze souboru** je přidá do kalendáře Lhůtník účtu, který je právě přihlášený.
   Před importem ukáže, co se přidá. Položky se stejným typem a názvem, které už v kalendáři jsou,
   přeskočí, takže import jde klidně spustit znovu.
 
@@ -102,18 +102,18 @@ Postup pro jiného uživatele: vy uděláte export, soubor mu pošlete, on se v 
 účtem a dá import. Export se hodí i jako záloha.
 
 Export z Google kalendáře (.ics) k tomu nepoužívejte: přenese jen holé události bez údajů
-aplikace (typ, rok narození, poslední provedení), takže by je jnCalendar na druhém účtu nepoznal.
+aplikace (typ, rok narození, poslední provedení), takže by je Lhůtník na druhém účtu nepoznal.
 
 ## Další lidé
 
 Aplikace v režimu „In production“ bez ověření zvládne až 100 uživatelů. Každý se přihlásí svým účtem
-a dostane vlastní kalendář jnCalendar. Pro sdílení jednoho kalendáře (třeba s rodinou) stačí
-kalendář „jnCalendar“ nasdílet v Google kalendáři.
+a dostane vlastní kalendář Lhůtník. Pro sdílení jednoho kalendáře (třeba s rodinou) stačí
+kalendář „Lhůtník“ nasdílet v Google kalendáři.
 
 ## Aktualizace webu
 
 Webová verze se nasazuje automaticky z větve `main`: po `git push` je změna
-na https://n-yachts.github.io/jnCalendar/ zhruba do minuty.
+na https://n-yachts.github.io/lhutnik/ zhruba do minuty.
 
 Soubory se načítají s číslem verze (`?v=…`), aby prohlížeč po nasazení nebral staré soubory
 z mezipaměti. Aktuální verzi vidíte v *Nastavení*.

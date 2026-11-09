@@ -37,7 +37,7 @@ pre.mono { background: var(--bg); padding: .75rem; border-radius: 8px; overflow-
 .topbar { display: flex; align-items: center; justify-content: space-between; padding: .9rem 1.25rem;
   max-width: 960px; margin: 0 auto; }
 .brand { font-weight: 700; font-size: 1.15rem; letter-spacing: -.01em; }
-.logo { margin-right: .25rem; }
+.logo { margin-right: .35rem; vertical-align: -6px; border-radius: 6px; }
 .top-actions { display: flex; gap: .4rem; }
 main { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 4rem; }
 

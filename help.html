@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nápověda – jnCalendar</title>
+  <title>Nápověda – Lhůtník</title>
   <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
   <meta name="theme-color" content="#1f5f8b">
-  <link rel="stylesheet" href="styles.css?v=20261109-1800">
+  <link rel="stylesheet" href="styles.css?v=20261109-1815">
   <style>
     .help { display: grid; grid-template-columns: 220px 1fr; gap: 2.5rem; max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 5rem; }
     .toc { position: sticky; top: 1rem; align-self: start; max-height: calc(100vh - 2rem); overflow: auto; font-size: .9rem; }
@@ -50,7 +50,7 @@
 </head>
 <body>
   <header class="topbar" style="max-width:1100px">
-    <a class="brand" href="./" style="text-decoration:none;color:inherit"><span class="logo">📅</span> jnCalendar</a>
+    <a class="brand" href="./" style="text-decoration:none;color:inherit"><img class="logo" src="icons/icon-192.png" alt="" width="26" height="26"> Lhůtník</a>
     <nav class="top-actions"><a class="btn ghost" href="./">← Zpět do aplikace</a></nav>
   </header>
 
@@ -58,7 +58,7 @@
     <nav class="toc" aria-label="Obsah">
       <b>Obsah</b>
       <ol>
-        <li><a href="#uvod">Co je jnCalendar</a></li>
+        <li><a href="#uvod">Co je Lhůtník</a></li>
         <li><a href="#nastaveni">První spuštění</a>
           <ol>
             <li><a href="#krok-projekt">1. Projekt</a></li>
@@ -103,18 +103,18 @@
       <!-- ================================================================ -->
       <section id="uvod">
         <h1>Nápověda</h1>
-        <p class="lead">jnCalendar hlídá důležitá data – narozeniny, svátky a výročí, platnost dokladů,
+        <p class="lead">Lhůtník hlídá důležitá data – narozeniny, svátky a výročí, platnost dokladů,
           STK, daně, výpovědní lhůty pojistek, prohlídky a očkování, péči o zvířata, údržbu auta,
           lodi, domu i zahrady, předplatná a záruky – a ukládá je do vašeho Google kalendáře
           i s připomínkami.</p>
         <p>Aplikace nemá vlastní server ani databázi. Všechno se ukládá do samostatného kalendáře
-          <b>jnCalendar</b> ve vašem Google účtu. Připomínky vám proto chodí z Google kalendáře do
+          <b>Lhůtník</b> ve vašem Google účtu. Připomínky vám proto chodí z Google kalendáře do
           telefonu i počítače, i když aplikaci zrovna nemáte otevřenou.</p>
-        <p>Aplikaci najdete na webu <a href="https://n-yachts.github.io/jnCalendar/">n-yachts.github.io/jnCalendar</a>.
+        <p>Aplikaci najdete na webu <a href="https://n-yachts.github.io/lhutnik/">n-yachts.github.io/lhutnik</a>.
           Na počítači ji jde spustit i lokálně přes <code>start.cmd</code> (běží pak na <code>http://localhost:8080</code>).
           Do telefonu ji můžete <a href="#mobil">nainstalovat jako aplikaci</a>.</p>
         <figure>
-          <img src="help/img/prehled.png?v=20261109-1800" alt="Přehled nadcházejících událostí" loading="lazy" width="1000" height="1000">
+          <img src="help/img/prehled.png?v=20261109-1815" alt="Přehled nadcházejících událostí" loading="lazy" width="1000" height="1000">
           <figcaption>Přehled: všechno nadcházející seřazené podle data.</figcaption>
         </figure>
       </section>
@@ -126,7 +126,7 @@
           v Google Cloud: aplikace tak dostane vlastní „klíč“ (<b>Client ID</b>), přes který se pak
           přihlašujete. Trvá to asi 10 minut, je to zdarma a nepotřebujete platební kartu.</p>
         <figure>
-          <img src="help/img/pruvodce-uvod.png?v=20261109-1800" alt="Úvodní obrazovka průvodce" loading="lazy" width="1000" height="760">
+          <img src="help/img/pruvodce-uvod.png?v=20261109-1815" alt="Úvodní obrazovka průvodce" loading="lazy" width="1000" height="760">
           <figcaption>Úvod průvodce. Nahoře vidíte, ve kterém kroku jste.</figcaption>
         </figure>
         <div class="tip"><b>Už máte Client ID?</b>
@@ -140,11 +140,11 @@
         <h3 id="krok-projekt">1. Založte projekt</h3>
         <ol class="steps-list">
           <li>Otevřete <a href="https://console.cloud.google.com/projectcreate" target="_blank" rel="noopener">vytvoření projektu</a> v Google Cloud Console.</li>
-          <li>Jako název zadejte třeba <code>jnCalendar</code>, organizaci nechte „Bez organizace“ a klikněte na <b>Vytvořit</b>.</li>
+          <li>Jako název zadejte třeba <code>Lhutnik</code>, organizaci nechte „Bez organizace“ a klikněte na <b>Vytvořit</b>.</li>
           <li>Počkejte, až se projekt vytvoří, a nahoře v liště ho vyberte.</li>
         </ol>
         <figure>
-          <img src="help/img/pruvodce-projekt.png?v=20261109-1800" alt="Krok průvodce: projekt" loading="lazy" width="1000" height="760">
+          <img src="help/img/pruvodce-projekt.png?v=20261109-1815" alt="Krok průvodce: projekt" loading="lazy" width="1000" height="760">
           <figcaption>Průvodce u každého kroku ukazuje přesný postup a odkaz.</figcaption>
         </figure>
 
@@ -157,7 +157,7 @@
         <h3 id="krok-souhlas">3. Nastavte souhlasovou obrazovku</h3>
         <ol class="steps-list">
           <li>Otevřete <a href="https://console.cloud.google.com/auth/overview" target="_blank" rel="noopener">Google Auth Platform</a> a klikněte na <b>Začít</b> (Get started).</li>
-          <li>Vyplňte <b>název aplikace</b> (<code>jnCalendar</code>) a <b>e-mail podpory</b> (váš e-mail).</li>
+          <li>Vyplňte <b>název aplikace</b> (<code>Lhůtník</code>) a <b>e-mail podpory</b> (váš e-mail).</li>
           <li>Jako cílovou skupinu (<b>Audience</b>) zvolte <b>Externí</b> (External).</li>
           <li>Znovu vyplňte svůj kontaktní e-mail, odsouhlaste podmínky a dokončete.</li>
           <li>V sekci <a href="https://console.cloud.google.com/auth/audience" target="_blank" rel="noopener">Audience</a> klikněte na <b>Publikovat aplikaci</b> (Publish app) a potvrďte.</li>
@@ -167,25 +167,29 @@
           a museli byste se znovu přihlašovat a odsouhlasovat. Publikování nevyžaduje ověření od Googlu;
           jen se při přihlášení zobrazí varování „Google tuto aplikaci neověřil“
           (<a href="#prihlaseni">viz přihlášení</a>). Publikovaná neověřená aplikace zvládne až 100 uživatelů.</div>
+        <div class="tip"><b>Nastavovali jste aplikaci ještě pod názvem jnCalendar?</b>
+          Nic měnit nemusíte, vše funguje dál. Pokud chcete, aby se i v okně přihlášení Googlu ukazoval
+          nový název, přepište ho v <a href="https://console.cloud.google.com/auth/branding" target="_blank" rel="noopener">Branding</a>
+          na <code>Lhůtník</code>.</div>
         <p>Pokud chcete zůstat v testovacím režimu, přidejte svůj účet (a účty dalších lidí) do
           <b>Test users</b> ve stejné sekci Audience.</p>
 
         <h3 id="krok-client">4. Vytvořte Client ID</h3>
         <ol class="steps-list">
           <li>Otevřete <a href="https://console.cloud.google.com/auth/clients/create" target="_blank" rel="noopener">vytvoření klienta</a>.</li>
-          <li>Typ aplikace: <b>Webová aplikace</b> (Web application), název třeba <code>jnCalendar web</code>.</li>
+          <li>Typ aplikace: <b>Webová aplikace</b> (Web application), název třeba <code>Lhůtník web</code>.</li>
           <li>Do <b>Autorizované zdroje JavaScriptu</b> (Authorized JavaScript origins) přidejte adresy,
             ze kterých aplikaci otevíráte:
             <ul>
               <li><code>https://n-yachts.github.io</code> – webová verze</li>
               <li><code>http://localhost:8080</code> – lokální verze přes <code>start.cmd</code></li>
             </ul>
-            Vždy jen doménu, <b>bez cesty</b> (<code>/jnCalendar</code>) a <b>bez lomítka na konci</b>.</li>
+            Vždy jen doménu, <b>bez cesty</b> (<code>/lhutnik</code>) a <b>bez lomítka na konci</b>.</li>
           <li>Pole <b>Autorizované URI přesměrování</b> nechte prázdné a klikněte na <b>Vytvořit</b>.</li>
           <li>Zkopírujte <b>Client ID</b> (končí na <code>.apps.googleusercontent.com</code>) a vložte ho do průvodce.</li>
         </ol>
         <figure>
-          <img src="help/img/pruvodce-client-id.png?v=20261109-1800" alt="Krok průvodce: Client ID" loading="lazy">
+          <img src="help/img/pruvodce-client-id.png?v=20261109-1815" alt="Krok průvodce: Client ID" loading="lazy">
           <figcaption>Adresu aktuální stránky si zkopírujete tlačítkem <i>Kopírovat</i>. Client ID vložíte do pole dole.</figcaption>
         </figure>
         <div class="tip"><b>Je Client ID tajné?</b>
@@ -198,15 +202,15 @@
           <li>Vyberte svůj Google účet.</li>
           <li>Objeví se upozornění <b>„Google tuto aplikaci neověřil“</b>. Je to vaše vlastní aplikace, takže
             pokračujte: klikněte na <b>Pokračovat</b>, případně nejdřív na odkaz <b>Rozšířené</b> (Advanced)
-            a potom <b>Přejít na jnCalendar</b>.</li>
+            a potom <b>Přejít na …</b> (název vaší aplikace).</li>
           <li>Povolte <b>obě oprávnění</b> ke kalendáři (zaškrtněte je, pokud nejsou).</li>
         </ol>
-        <p>Aplikace pak sama založí kalendář <b>jnCalendar</b> a můžete začít přidávat položky.</p>
+        <p>Aplikace pak sama založí kalendář <b>Lhůtník</b> a můžete začít přidávat položky.</p>
         <figure class="half">
-          <img src="help/img/pruvodce-hotovo.png?v=20261109-1800" alt="Poslední krok průvodce" loading="lazy">
+          <img src="help/img/pruvodce-hotovo.png?v=20261109-1815" alt="Poslední krok průvodce" loading="lazy">
           <figcaption>Poslední krok průvodce.</figcaption>
         </figure><figure class="half">
-          <img src="help/img/prihlaseni.png?v=20261109-1800" alt="Obrazovka přihlášení" loading="lazy">
+          <img src="help/img/prihlaseni.png?v=20261109-1815" alt="Obrazovka přihlášení" loading="lazy">
           <figcaption>Přihlášení po vypršení (asi po hodině nebo při novém otevření).</figcaption>
         </figure>
         <p>Přihlášení platí přibližně hodinu. Pak aplikace požádá o nové přihlášení – stačí kliknout,
@@ -218,7 +222,7 @@
       <section id="prehled">
         <h2>Přehled</h2>
         <p>Záložka <b>📋 Přehled</b> se otevře jako první. Ukazuje, co vás čeká: všechny nadcházející
-          události z kalendáře jnCalendar seřazené podle data a seskupené po měsících.
+          události z kalendáře Lhůtník seřazené podle data a seskupené po měsících.
           <b>Dny, kdy nic není, se vynechají.</b></p>
         <ul>
           <li><b>Nahoře</b> vidíte, kdo má dnes a zítra svátek (podle českého kalendáře jmen).</li>
@@ -230,7 +234,7 @@
           <li><b>Kliknutím</b> na událost ji otevřete k úpravě.</li>
         </ul>
         <figure>
-          <img src="help/img/prehled-lide.png?v=20261109-1800" alt="Přehled s filtrem Lidé" loading="lazy">
+          <img src="help/img/prehled-lide.png?v=20261109-1815" alt="Přehled s filtrem Lidé" loading="lazy">
           <figcaption>Filtr <i>👥 Lidé</i>: jen narozeniny, svátky a výročí.</figcaption>
         </figure>
         <p>Tlačítko <b>⟳ Obnovit</b> načte data znovu z Google kalendáře – hodí se, když jste
@@ -258,7 +262,7 @@
         </ol>
         <p>Po kliknutí na <b>Uložit</b> se položka hned objeví v Google kalendáři.</p>
         <figure>
-          <img src="help/img/formular-narozeniny.png?v=20261109-1800" alt="Formulář nové položky – narozeniny" loading="lazy">
+          <img src="help/img/formular-narozeniny.png?v=20261109-1815" alt="Formulář nové položky – narozeniny" loading="lazy">
           <figcaption>Nová položka typu Narozeniny.</figcaption>
         </figure>
       </section>
@@ -298,7 +302,7 @@
           i navržené datum. Pod seznamem se ukáže krátká poznámka (např. <i>obvykle každou sezónu</i>).
           Do názvu pak můžete doplnit podrobnost, třeba „Zubař – Jan“ nebo „Přezutí – Octavia“.</p>
         <figure>
-          <img src="help/img/formular-lod.png?v=20261109-1800" alt="Formulář s rychlou volbou pro loď" loading="lazy">
+          <img src="help/img/formular-lod.png?v=20261109-1815" alt="Formulář s rychlou volbou pro loď" loading="lazy">
           <figcaption>Rychlá volba u typu Loď. Typy jsou ve formuláři seřazené do skupin.</figcaption>
         </figure>
         <div class="tip"><b>Intervaly jsou orientační</b>
@@ -315,7 +319,7 @@
             <b>datum doplní samo</b> a pod polem uvidíte, kdy má svátek. Datum můžete i ručně přepsat.</li>
         </ul>
         <figure>
-          <img src="help/img/formular-svatek.png?v=20261109-1800" alt="Formulář svátku s automaticky doplněným datem" loading="lazy">
+          <img src="help/img/formular-svatek.png?v=20261109-1815" alt="Formulář svátku s automaticky doplněným datem" loading="lazy">
           <figcaption>U svátku se datum doplní podle jména („Eva má svátek 24. 12.“).</figcaption>
         </figure>
         <div class="tip"><b>Tip</b> Do poznámky si u lidí můžete psát, co mají rádi nebo nápady na dárky.</div>
@@ -357,7 +361,7 @@
           konec fixace energií, konec závazku u mobilu či internetu a konec leasingu nebo úvěru.
           Když nastavíte lhůtu 0, zapíše se přímo datum výročí nebo konce smlouvy.</p>
         <figure>
-          <img src="help/img/formular-smlouva.png?v=20261109-1800" alt="Formulář smlouvy s výpovědní lhůtou" loading="lazy">
+          <img src="help/img/formular-smlouva.png?v=20261109-1815" alt="Formulář smlouvy s výpovědní lhůtou" loading="lazy">
           <figcaption>Povinné ručení s výročím 1. 3.: do kalendáře se zapíše poslední den pro výpověď.</figcaption>
         </figure>
 
@@ -384,7 +388,7 @@
           </tbody>
         </table>
         <figure>
-          <img src="help/img/formular-prohlidky.png?v=20261109-1800" alt="Formulář s rychlou volbou prohlídky" loading="lazy">
+          <img src="help/img/formular-prohlidky.png?v=20261109-1815" alt="Formulář s rychlou volbou prohlídky" loading="lazy">
           <figcaption>Rychlá volba vyplní název a interval. Do názvu můžete doplnit jméno, třeba „Zubař – Jan“.</figcaption>
         </figure>
         <p>U očkování se interval liší podle věku a vakcíny – nastavte ho podle doporučení lékaře.
@@ -441,7 +445,7 @@
         <p>Nový termín = <b>datum provedení + interval opakování</b>. Aplikace si zapamatuje, kdy jste
           úkon provedli naposledy, a ukazuje to v seznamu („naposledy 15. 12. 2024“).</p>
         <figure>
-          <img src="help/img/hotovo.png?v=20261109-1800" alt="Úprava STK s tlačítkem Hotovo" loading="lazy">
+          <img src="help/img/hotovo.png?v=20261109-1815" alt="Úprava STK s tlačítkem Hotovo" loading="lazy">
           <figcaption>Rámeček Hotovo u technické kontroly.</figcaption>
         </figure>
         <div class="tip"><b>Rámeček nevidíte?</b> Objeví se jen u uvedených typů, a to když se položka opakuje.
@@ -463,7 +467,7 @@
           ukazuje naléhavost: <span style="color:var(--warn)">do týdne</span>,
           <span style="color:var(--soon)">do měsíce</span>, <span style="color:var(--bad)">prošlé</span>.</p>
         <figure>
-          <img src="help/img/polozky.png?v=20261109-1800" alt="Seznam položek se souhrnem" loading="lazy">
+          <img src="help/img/polozky.png?v=20261109-1815" alt="Seznam položek se souhrnem" loading="lazy">
           <figcaption>Seznam položek seřazený podle nejbližšího termínu.</figcaption>
         </figure>
       </section>
@@ -489,7 +493,7 @@
           <li>Nejvíc jde nastavit <b>28 dní</b> předem – víc Google kalendář nedovolí.</li>
           <li>Upozornění posílá Google kalendář: na telefon (aplikace Google Kalendář) a v prohlížeči.
             Volba <i>i e-mailem</i> přidá e-mail.</li>
-          <li>Kalendář jnCalendar musí být v Google kalendáři zapnutý (zaškrtnutý), jinak upozornění nechodí.</li>
+          <li>Kalendář Lhůtník musí být v Google kalendáři zapnutý (zaškrtnutý), jinak upozornění nechodí.</li>
         </ul>
       </section>
 
@@ -498,14 +502,14 @@
         <h2>Export, import a záloha</h2>
         <p>V <b>⚙︎ Nastavení → Přenos položek</b>:</p>
         <ul>
-          <li><b>⬇ Exportovat do souboru</b> uloží všechny položky do souboru <code>jnCalendar-RRRR-MM-DD.json</code>.</li>
+          <li><b>⬇ Exportovat do souboru</b> uloží všechny položky do souboru <code>lhutnik-RRRR-MM-DD.json</code>.</li>
           <li><b>⬆ Importovat ze souboru</b> položky ze souboru přidá do kalendáře účtu, který je právě přihlášený.</li>
         </ul>
         <figure class="half">
-          <img src="help/img/nastaveni.png?v=20261109-1800" alt="Nastavení s exportem a importem" loading="lazy">
+          <img src="help/img/nastaveni.png?v=20261109-1815" alt="Nastavení s exportem a importem" loading="lazy">
           <figcaption>Nastavení: přenos položek, instalace aplikace, účet a verze.</figcaption>
         </figure><figure class="half">
-          <img src="help/img/import.png?v=20261109-1800" alt="Náhled importu" loading="lazy">
+          <img src="help/img/import.png?v=20261109-1815" alt="Náhled importu" loading="lazy">
           <figcaption>Před importem uvidíte, co se přidá.</figcaption>
         </figure>
         <h3>Přenos k jinému uživateli</h3>
@@ -520,27 +524,27 @@
           klidně spustit znovu.</p>
         <div class="warn"><b>Nepoužívejte export z Google kalendáře (.ics)</b>
           Přenesl by jen holé události bez údajů aplikace (typ, rok narození, poslední provedení)
-          a jnCalendar by je na druhém účtu nepoznal.</div>
+          a Lhůtník by je na druhém účtu nepoznal.</div>
         <div class="tip"><b>Záloha</b> Export se hodí i jako záloha – udělejte ho občas a soubor si uložte.</div>
       </section>
 
       <!-- ================================================================ -->
       <section id="mobil">
         <h2>Instalace do telefonu a počítače</h2>
-        <p>jnCalendar se dá <b>nainstalovat jako aplikace</b>: dostane vlastní ikonu na ploše, spouští se
+        <p>Lhůtník se dá <b>nainstalovat jako aplikace</b>: dostane vlastní ikonu na ploše, spouští se
           na celou obrazovku bez adresního řádku a objeví se v seznamu aplikací. Instaluje se přímo
           z webu, bez Google Play, a aktualizace se projeví samy.</p>
         <p style="display:flex;align-items:center;gap:1rem">
-          <img src="icons/icon-192.png" alt="Ikona jnCalendar" width="72" height="72" style="border-radius:16px">
+          <img src="icons/icon-192.png" alt="Ikona Lhůtníku" width="72" height="72" style="border-radius:16px">
           <span class="muted">Takto vypadá ikona aplikace na ploše.</span></p>
 
         <h3 id="instalace-android">Android (Chrome)</h3>
         <ol class="steps-list">
-          <li>Otevřete <a href="https://n-yachts.github.io/jnCalendar/">n-yachts.github.io/jnCalendar</a> v Chromu.</li>
+          <li>Otevřete <a href="https://n-yachts.github.io/lhutnik/">n-yachts.github.io/lhutnik</a> v Chromu.</li>
           <li>Klepněte na tlačítko <b>📲 Nainstalovat</b> v horní liště aplikace (nebo v <i>Nastavení</i>).
             Když tlačítko nevidíte, použijte menu prohlížeče <b>⋮</b> → <b>Nainstalovat aplikaci</b>
             (u starších verzí <b>Přidat na plochu</b>).</li>
-          <li>Potvrďte. Ikona jnCalendar se objeví na ploše a v seznamu aplikací.</li>
+          <li>Potvrďte. Ikona Lhůtníku se objeví na ploše a v seznamu aplikací.</li>
         </ol>
         <div class="tip"><b>Zkratka</b> Když na ikonu na ploše podržíte prst, nabídne <b>Přidat položku</b>
           (otevře rovnou formulář) a <b>Nápověda</b>.</div>
@@ -555,7 +559,7 @@
 
         <h3 id="instalace-pc">Počítač (Chrome, Edge)</h3>
         <p>Vpravo v adresním řádku klikněte na ikonu instalace (monitor se šipkou), nebo použijte tlačítko
-          <b>📲 Nainstalovat</b> v aplikaci. jnCalendar se pak spouští v samostatném okně jako běžný program.</p>
+          <b>📲 Nainstalovat</b> v aplikaci. Lhůtník se pak spouští v samostatném okně jako běžný program.</p>
 
         <h3>Dobré vědět</h3>
         <ul>
@@ -571,10 +575,10 @@
         </ul>
         <p>Aplikace se přizpůsobí velikosti displeje i tmavému režimu telefonu.</p>
         <figure class="phone half">
-          <img src="help/img/mobil.png?v=20261109-1800" alt="Aplikace na mobilu" loading="lazy">
+          <img src="help/img/mobil.png?v=20261109-1815" alt="Aplikace na mobilu" loading="lazy">
           <figcaption>Přehled na telefonu. Vpravo nahoře je tlačítko Nainstalovat, když je instalace k dispozici.</figcaption>
         </figure><figure class="half">
-          <img src="help/img/tmavy-rezim.png?v=20261109-1800" alt="Tmavý režim" loading="lazy">
+          <img src="help/img/tmavy-rezim.png?v=20261109-1815" alt="Tmavý režim" loading="lazy">
           <figcaption>Tmavý režim se zapne podle nastavení systému.</figcaption>
         </figure>
       </section>
@@ -583,7 +587,7 @@
       <section id="google">
         <h2>V Google kalendáři</h2>
         <ul>
-          <li>Všechno je v samostatném kalendáři <b>jnCalendar</b>. V Google kalendáři ho můžete
+          <li>Všechno je v samostatném kalendáři <b>Lhůtník</b>. V Google kalendáři ho můžete
             skrýt, přebarvit nebo nasdílet (např. rodině) jako kterýkoli jiný kalendář.</li>
           <li>Události jsou celodenní a nepočítají se jako „zaneprázdněn“.</li>
           <li>Každý typ má vlastní barvu a název začíná typem: <i>Narozeniny: Jana Nováková</i>,
@@ -591,7 +595,7 @@
             se událost jmenuje <i>Poslední den výpovědi: Povinné ručení (výročí 1. 3.)</i>.</li>
           <li>Do kalendáře se dostanete i z aplikace: <i>Nastavení → Otevřít Google kalendář</i>.</li>
         </ul>
-        <p>Aplikace pracuje <b>jen s kalendářem jnCalendar</b>. Vaše ostatní kalendáře nevidí a nic v nich nemění.</p>
+        <p>Aplikace pracuje <b>jen s kalendářem Lhůtník</b>. Vaše ostatní kalendáře nevidí a nic v nich nemění.</p>
       </section>
 
       <!-- ================================================================ -->
@@ -622,8 +626,8 @@
         <details class="faq"><summary>Jméno u svátku se nenašlo</summary>
           <p>Jméno v českém kalendáři jmen není (nebo je jinak napsané). Zadejte datum ručně.</p></details>
         <details class="faq"><summary>Nechodí mi připomínky</summary>
-          <p>Zkontrolujte, že je kalendář jnCalendar v Google kalendáři zapnutý a že má aplikace Google
-            Kalendář v telefonu povolená oznámení. Připomínky posílá Google, ne jnCalendar.</p></details>
+          <p>Zkontrolujte, že je kalendář Lhůtník v Google kalendáři zapnutý a že má aplikace Google
+            Kalendář v telefonu povolená oznámení. Připomínky posílá Google, ne Lhůtník.</p></details>
         <details class="faq"><summary>„Port 8080 je obsazený“ (lokální verze)</summary>
           <p>Aplikace už nejspíš běží v jiném okně. Zavřete ho, nebo použijte to otevřené.</p></details>
         <details class="faq"><summary>Chci začít znovu / změnit Client ID</summary>
@@ -636,9 +640,9 @@
         <p>Aplikace žádá jen tato dvě oprávnění:</p>
         <ul>
           <li><b>Vytvářet vlastní kalendáře a spravovat události jen v nich</b>
-            (<code>calendar.app.created</code>) – aplikace smí měnit jen kalendář jnCalendar, který sama založila.</li>
+            (<code>calendar.app.created</code>) – aplikace smí měnit jen kalendář Lhůtník, který sama založila.</li>
           <li><b>Číst seznam kalendářů</b> (<code>calendar.calendarlist.readonly</code>) – aby našla už založený
-            jnCalendar, např. na novém zařízení.</li>
+            Lhůtník, např. na novém zařízení.</li>
         </ul>
         <p>Data se ukládají jen do vašeho Google kalendáře. Aplikace nemá server, nikam data neposílá
           a nic nesleduje. V prohlížeči si pamatuje jen Client ID, ID kalendáře a vaše volby zobrazení;

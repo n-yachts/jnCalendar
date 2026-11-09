@@ -1,8 +1,8 @@
-// Service worker jnCalendar: umožní instalaci aplikace a její spuštění i při slabém signálu.
+// Service worker Lhůtník: umožní instalaci aplikace a její spuštění i při slabém signálu.
 // Strategie „nejdřív síť“: vždy se zkusí nová verze z webu, mezipaměť je jen záloha,
 // takže aktualizace se projeví hned. Volání Googlu (přihlášení, kalendář) se nikdy neukládají.
-const VERSION = '20261109-1800';
-const CACHE = `jncalendar-${VERSION}`;
+const VERSION = '20261109-1815';
+const CACHE = `lhutnik-${VERSION}`;
 const SHELL = [
   './',
   './index.html',
@@ -24,7 +24,7 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k.startsWith('jncalendar-') && k !== CACHE).map(k => caches.delete(k))))
+      .then(keys => Promise.all(keys.filter(k => (k.startsWith('lhutnik-') || k.startsWith('jncalendar-')) && k !== CACHE).map(k => caches.delete(k))))
       .then(() => self.clients.claim()),
   );
 });

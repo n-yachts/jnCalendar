@@ -1,8 +1,8 @@
-import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1800';
-import { TYPES, TYPE_GROUPS, DEFAULTS, PRESETS, DONE_TYPES, OCCASION } from './catalog.js?v=20261109-1800';
-import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, eventStartDate, AuthError } from './calendar.js?v=20261109-1800';
-import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1800';
-import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1800';
+import { initAuth, signIn, signOut, getStoredToken, SCOPES } from './auth.js?v=20261109-1815';
+import { TYPES, TYPE_GROUPS, DEFAULTS, PRESETS, DONE_TYPES, OCCASION } from './catalog.js?v=20261109-1815';
+import { ensureCalendar, listItems, listOccurrences, saveItem, deleteItem, eventStartDate, AuthError } from './calendar.js?v=20261109-1815';
+import { nextOccurrence, daysBetween, todayStr, addDays, addMonths, repeatMonths, formatCz, relativeCz, yearsAt, parseDate, formatDate } from './dates.js?v=20261109-1815';
+import { findNameDay, nameDayOn } from './svatky.js?v=20261109-1815';
 
 // ---------- Stav ----------
 const LS = { client: 'jn.clientId', cal: 'jn.calendarId', step: 'jn.setupStep', range: 'jn.agendaRange', tab: 'jn.tab' };
@@ -40,19 +40,19 @@ function toast(msg, kind = '') {
 
 // ---------- Průvodce prvním spuštěním ----------
 const CONSOLE = 'https://console.cloud.google.com';
-const PUBLIC_URL = 'https://n-yachts.github.io/jnCalendar/';
+const PUBLIC_URL = 'https://n-yachts.github.io/lhutnik/';
 const SETUP = [
   {
     title: 'Vítejte',
     html: () => `
-      <h1>Vítejte v jnCalendar</h1>
+      <h1>Vítejte v Lhůtníku</h1>
       <a class="help-card" href="help.html" target="_blank" rel="noopener">
         <span class="hc-icon">📖</span>
         <span><b>Podrobná nápověda s obrázky</b><br>
         <span class="muted">Jak aplikaci nastavit a používat, krok za krokem. Otevře se v nové záložce.</span></span>
       </a>
       <p>Aplikace hlídá důležitá data a ukládá je do samostatného Google kalendáře
-         <b>jnCalendar</b> včetně připomínek:</p>
+         <b>Lhůtník</b> včetně připomínek:</p>
       <ul class="features">
         <li>🎂 <b>Narozeniny</b>, 💐 <b>svátky</b> a 💍 <b>výročí</b>: kolikáté jsou, svátek podle jména</li>
         <li>🪪 <b>Doklady</b>, 🚗 <b>STK</b>, 🏛️ <b>daně a poplatky</b>: konce platnosti a termíny</li>
@@ -78,7 +78,7 @@ const SETUP = [
       <h2>1. Založte projekt</h2>
       <ol>
         <li>Otevřete <a href="${CONSOLE}/projectcreate" target="_blank" rel="noopener">vytvoření projektu</a>.</li>
-        <li>Název třeba <code>jnCalendar</code>, organizaci ponechte „Bez organizace“ a klikněte na <b>Vytvořit</b>.</li>
+        <li>Název třeba <code>Lhutnik</code>, organizaci ponechte „Bez organizace“ a klikněte na <b>Vytvořit</b>.</li>
         <li>Počkejte, až se projekt vytvoří, a nahoře ho vyberte.</li>
       </ol>`,
   },
@@ -97,7 +97,7 @@ const SETUP = [
       <h2>3. Nastavte souhlasovou obrazovku</h2>
       <ol>
         <li>Otevřete <a href="${CONSOLE}/auth/overview" target="_blank" rel="noopener">Google Auth Platform</a> a klikněte na <b>Začít</b> (Get started).</li>
-        <li><b>Název aplikace:</b> <code>jnCalendar</code>, <b>e-mail podpory:</b> váš e-mail.</li>
+        <li><b>Název aplikace:</b> <code>Lhůtník</code>, <b>e-mail podpory:</b> váš e-mail.</li>
         <li><b>Cílová skupina (Audience):</b> zvolte <b>Externí</b> (External).</li>
         <li>Kontaktní e-mail vyplňte znovu svůj, odsouhlaste podmínky a dokončete.</li>
         <li>V sekci <a href="${CONSOLE}/auth/audience" target="_blank" rel="noopener">Audience</a> klikněte na
@@ -122,7 +122,7 @@ const SETUP = [
       <h2>4. Vytvořte Client ID</h2>
       <ol>
         <li>Otevřete <a href="${CONSOLE}/auth/clients/create" target="_blank" rel="noopener">vytvoření klienta</a>.</li>
-        <li><b>Typ aplikace:</b> Webová aplikace (Web application), název třeba <code>jnCalendar web</code>.</li>
+        <li><b>Typ aplikace:</b> Webová aplikace (Web application), název třeba <code>Lhůtník web</code>.</li>
         <li>Do <b>Autorizované zdroje JavaScriptu</b> (Authorized JavaScript origins) přidejte přesně:
           <div class="copyline"><code id="origin-val">${esc(location.origin)}</code>
             <button type="button" class="ghost small" data-copy="#origin-val">Kopírovat</button></div>
@@ -154,10 +154,10 @@ const SETUP = [
       <p>Hotovo. Teď se přihlaste svým Google účtem. Při prvním přihlášení:</p>
       <ol>
         <li>Pokud se objeví „Google tuto aplikaci neověřil“, klikněte na <b>Pokračovat</b>
-            (případně nejdřív na <b>Rozšířené</b> a pak <b>Přejít na jnCalendar</b>).</li>
+            (případně nejdřív na <b>Rozšířené</b> a pak <b>Přejít na …</b> (název vaší aplikace)).</li>
         <li>Zaškrtněte obě oprávnění ke kalendáři.</li>
       </ol>
-      <p>Aplikace pak založí kalendář <b>jnCalendar</b> a můžete přidávat položky.</p>`,
+      <p>Aplikace pak založí kalendář <b>Lhůtník</b> a můžete přidávat položky.</p>`,
     nextLabel: 'Přihlásit se přes Google',
   },
 ];
@@ -783,7 +783,7 @@ let importQueue = [];
 
 $('#btn-export').onclick = () => {
   const data = {
-    app: 'jnCalendar',
+    app: 'lhutnik',
     format: 1,
     exported: new Date().toISOString(),
     items: state.items.map(i => Object.fromEntries(EXPORT_FIELDS.map(k => [k, i[k]]))),
@@ -791,7 +791,7 @@ $('#btn-export').onclick = () => {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `jnCalendar-${todayStr()}.json`;
+  a.download = `lhutnik-${todayStr()}.json`;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   toast(`Exportováno ${data.items.length} položek`);
@@ -833,8 +833,8 @@ $('#import-file').onchange = async e => {
   const file = e.target.files[0];
   if (!file) return;
   let data;
-  try { data = JSON.parse(await file.text()); } catch { return toast('Soubor nejde přečíst. Je to export z jnCalendar?', 'error'); }
-  if (data?.app !== 'jnCalendar' || !Array.isArray(data.items)) return toast('Tohle není export z jnCalendar.', 'error');
+  try { data = JSON.parse(await file.text()); } catch { return toast('Soubor nejde přečíst. Je to export z Lhůtníku?', 'error'); }
+  if (!['lhutnik', 'jnCalendar'].includes(data?.app) || !Array.isArray(data.items)) return toast('Tohle není export z Lhůtníku.', 'error');
 
   const existing = new Set(state.items.map(itemKey));
   const valid = data.items.map(cleanImported).filter(Boolean);
@@ -846,7 +846,7 @@ $('#import-file').onchange = async e => {
   for (const i of importQueue) byType[i.type] = (byType[i.type] || 0) + 1;
   $('#import-summary').innerHTML = `
     <p>Soubor <b>${esc(file.name)}</b>${data.exported ? `, exportováno ${formatCz(data.exported.slice(0, 10))}` : ''}.</p>
-    <p><b>${importQueue.length}</b> položek se přidá do kalendáře jnCalendar tohoto účtu:</p>
+    <p><b>${importQueue.length}</b> položek se přidá do kalendáře Lhůtník tohoto účtu:</p>
     <p class="muted">${Object.entries(byType).map(([k, n]) => `${TYPES[k].icon} ${esc(TYPES[k].short || TYPES[k].label)} ${n}`).join(' · ') || '—'}</p>
     ${dup ? `<p class="hint">${dup} položek tu už je (stejný typ a název), ty se přeskočí.</p>` : ''}
     ${invalid ? `<p class="hint">${invalid} položek je poškozených a nenačtou se.</p>` : ''}`;
@@ -890,9 +890,9 @@ function updateInstallUi() {
   $('#btn-install').hidden = !can;
   $('#btn-install-top').hidden = !can;
   $('#install-info').innerHTML = isStandalone()
-    ? '✓ jnCalendar běží jako nainstalovaná aplikace.'
+    ? '✓ Lhůtník běží jako nainstalovaná aplikace.'
     : can
-      ? 'Nainstalujte si jnCalendar jako aplikaci: vlastní ikona na ploše, spuštění na celou obrazovku.'
+      ? 'Nainstalujte si Lhůtník jako aplikaci: vlastní ikona na ploše, spuštění na celou obrazovku.'
       : isIOS()
         ? 'Na iPhonu a iPadu: v Safari klepněte na <b>Sdílet</b> a zvolte <b>Přidat na plochu</b>.'
         : 'V Chromu na Androidu: menu <b>⋮</b> → <b>Nainstalovat aplikaci</b> (nebo <b>Přidat na plochu</b>). '
@@ -907,7 +907,7 @@ window.addEventListener('beforeinstallprompt', e => {
 window.addEventListener('appinstalled', () => {
   installPrompt = null;
   updateInstallUi();
-  toast('jnCalendar je nainstalovaný ✓');
+  toast('Lhůtník je nainstalovaný ✓');
 });
 async function doInstall() {
   if (!installPrompt) return;

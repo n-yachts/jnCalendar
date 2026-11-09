@@ -6,7 +6,7 @@
 export const SCOPES = [
   // Vytvářet vlastní kalendáře a spravovat události jen v nich.
   'https://www.googleapis.com/auth/calendar.app.created',
-  // Číst seznam kalendářů – abychom našli už založený "jnCalendar".
+  // Číst seznam kalendářů – abychom našli už založený "Lhůtník".
   'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
 ];
 

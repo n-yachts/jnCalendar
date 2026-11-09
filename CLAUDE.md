@@ -1,7 +1,7 @@
-# jnCalendar – pokyny pro úpravy
+# Lhůtník – pokyny pro úpravy
 
 Statická webová aplikace (HTML + JS moduly, bez buildu) nad Google Calendar API.
-Nasazuje se přes GitHub Pages z větve `main`: https://n-yachts.github.io/jnCalendar/
+Nasazuje se přes GitHub Pages z větve `main`: https://n-yachts.github.io/lhutnik/
 
 ## Při každé změně aplikace
 
@@ -17,6 +17,12 @@ Nasazuje se přes GitHub Pages z větve `main`: https://n-yachts.github.io/jnCal
 5. Uživatelské texty jsou česky. Nový typ položky = `TYPES`, `TYPE_GROUPS`, `DEFAULTS`
    (+ `PRESETS`, `OCCASION`, `DONE_TYPES`) v `js/catalog.js`, barva `.item.t-…` ve `styles.css`,
    úvod průvodce, nápověda (tabulka typů), README. Intervaly a lhůty v rychlé volbě ověř ve zdrojích.
+
+## Dřívější název
+
+Aplikace se dříve jmenovala **jnCalendar** (repozitář i adresa `/jnCalendar/`). Kvůli kompatibilitě:
+kalendář se najde i pod starým názvem a přejmenuje se (`LEGACY_NAMES` v `js/calendar.js`),
+import přijímá soubory s `app: 'jnCalendar'`, klíče v `localStorage` zůstávají `jn.*`.
 
 ## Struktura
 

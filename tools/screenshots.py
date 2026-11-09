@@ -111,9 +111,15 @@ class FakeCalendar:
         if path == '/users/me/calendarList':
             return ok({'items': [{'id': k, 'summary': v} for k, v in self.cals.items()]})
         if path == '/calendars' and req.method == 'POST':
-            cid = 'jncalendar%d@group.calendar.google.com' % len(self.cals)
+            cid = 'lhutnik%d@group.calendar.google.com' % len(self.cals)
             self.cals[cid] = json.loads(req.post_data)['summary']
             return ok({'id': cid})
+        mc = re.match(r'^/calendars/([^/]+)$', path)
+        if mc:
+            cid = unquote(mc.group(1))
+            if req.method == 'PATCH':
+                self.cals[cid] = json.loads(req.post_data)['summary']
+            return ok({'id': cid, 'summary': self.cals.get(cid)})
         m = re.match(r'^/calendars/([^/]+)/events(?:/([^/]+))?$', path)
         if not m:
             return ok({'error': {'message': 'unhandled'}}, 400)
@@ -164,9 +170,9 @@ def main():
     base = f'http://localhost:{PORT}/'
     api = FakeCalendar()
 
-    demo_file = os.path.join(tempfile.mkdtemp(), 'jnCalendar-ukazka.json')
+    demo_file = os.path.join(tempfile.mkdtemp(), 'lhutnik-ukazka.json')
     with open(demo_file, 'w', encoding='utf-8') as f:
-        json.dump({'app': 'jnCalendar', 'format': 1, 'exported': FIXED_NOW, 'items': DEMO}, f, ensure_ascii=False)
+        json.dump({'app': 'lhutnik', 'format': 1, 'exported': FIXED_NOW, 'items': DEMO}, f, ensure_ascii=False)
 
     def shot(page, name, **kw):
         page.mouse.move(2, 2)  # žádné zvýraznění pod kurzorem
